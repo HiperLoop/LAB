@@ -1,0 +1,127 @@
+\documentclass[twocolumn,a4paper,aps,amsmath,amssymb,floatfix,superscriptaddress]{revtex4-2}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{physics}
+\usepackage[shortlabels]{enumitem}
+\usepackage{cancel}
+\usepackage{lastpage}
+\usepackage{braket}
+\usepackage{mathrsfs}
+\usepackage{appendix}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\newcommand{\todo}[1]{
+    \textbf{TODO: $<$#1$>$}
+}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{NS-204B - Statystische fysica theorie en experiment}
+\rhead{\projectauthors}
+\fancyfoot{}
+\fancyfoot[R]{Page \thepage /\pageref{LastPage}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\E}{\mathbb{E}}
+
+\newcommand{\mbeq}{\overset{!}{=}}
+\newcommand{\ko}{\frac{1}{4\pi \epsilon_0}}
+
+\lstset{frame=tb,
+  language=java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle={\small\ttfamily},,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=true,                  
+    tabsize=1
+}
+
+\lstset{style=mystyle}
+
+\graphicspath {{../../figures/}}
+
+\begin{document}
+
+\title{Title}
+        
+\author{Bela F. Brunner}
+%Lines break automatically or can be forced with \\
+\affiliation{Department of Physics, \\
+Utrecht University}
+
+\author{Adam Zich}
+\affiliation{Department of Physics, \\
+Utrecht University}
+
+\date{\today}
+
+\begin{abstract}
+
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{intro}
+
+\section{Theory}\label{theory}
+
+\section{Methodology}
+
+\section{Results}\label{results}
+
+\section{Discussion}
+
+\section{Conclusions}\label{conclusions}
+
+
+\bibliographystyle{unsrt}
+\addcontentsline{toc}{section}{Bibliography}
+\bibliography{article_bibliography}
+
+
+\end{document}
