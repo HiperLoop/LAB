@@ -18,7 +18,6 @@ mpl.rc('image', cmap='gray')
 def gray(image):
     return image[:, :, 1]  # Take just the green channel
 
-
 def main():
     frames = gray(pims.open(f'{VIDEO_PATH}/A001 - 20261007_155450.wmv'))
 
@@ -57,6 +56,11 @@ def main():
 
     d = tp.compute_drift(t2)
     d.plot()
+    plt.show()
+
+    tm = tp.subtract_drift(t2.copy(), d)
+
+    ax = tp.plot_traj(tm)
     plt.show()
 
 if __name__ == "__main__":
