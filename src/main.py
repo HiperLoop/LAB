@@ -66,13 +66,19 @@ def plotDriftCorrectedTrajectories(t2, d):
     ax = tp.plot_traj(tm)
     plt.show()
 
+def getAnnotatedVideo(frames, processed_frames):
+    tp.annotate(processed_frames, frames)
+
 def main():
-    minmass = 2000
-    frames = loadFramesFromVideo("A001 - 20261007_155450.wmv")
-    processed_frames = processFrames(frames, minmass)
-    trajectories = calculateTrajectories(processed_frames)
-    drift = calculateOverallDrift(trajectories)
-    plotDriftCorrectedTrajectories(trajectories, drift)
+    minmass = 50000
+    frames = loadFramesFromVideo("A002 - 20261009_122705.wmv")
+    #processed_frames = processFrames(frames, minmass)
+    f = tp.locate(frames, 29, invert=True, minmass=minmass)
+    getMassHistogram(f)
+    tp.annotate(f, frames[0])
+    #trajectories = calculateTrajectories(processed_frames)
+    #drift = calculateOverallDrift(trajectories)
+    #plotDriftCorrectedTrajectories(trajectories, drift)
 
 if __name__ == "__main__":
     main()
