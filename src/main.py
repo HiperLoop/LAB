@@ -70,10 +70,10 @@ def getAnnotatedVideo(frames, processed_frames):
     tp.annotate(processed_frames, frames)
 
 def main():
-    minmass = 50000
-    frames = loadFramesFromVideo("A002 - 20261009_122705.wmv")
+    minmass = 60000
+    frames = loadFramesFromVideo("A004 - 20261009_124708.wmv")
     #processed_frames = processFrames(frames, minmass)
-    f = tp.locate(frames, 29, invert=True, minmass=minmass)
+    f = tp.locate(frames, 37, invert=True, minmass=minmass)
     getMassHistogram(f)
     tp.annotate(f, frames[0])
     #trajectories = calculateTrajectories(processed_frames)
