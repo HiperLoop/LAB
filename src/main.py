@@ -120,7 +120,7 @@ def main():
     plotTrajectories(drift_corrected_trajectories)
     D = calculateDiffusionParameterFromData(amsd)
     viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(21.0), 2 * (10**(-6)), D)
-    print(f'The viscosity is {viscosity} mPA/s')
+    print(f'The viscosity is {viscosity} mPa/s')
 
 if __name__ == "__main__":
     '''Module helper.'''
