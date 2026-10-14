@@ -113,13 +113,14 @@ def main():
     trajectories = calculateTrajectories(processed_frames, number_of_frames)
     drift = calculateOverallDrift(trajectories)
     drift_corrected_trajectories = calculateDriftCorrectedTrajectories(trajectories, drift)
-    amsd = tp.emsd(drift_corrected_trajectories, mpp=0.1, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
+    amsd = tp.emsd(drift_corrected_trajectories, mpp=80/616, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
     print(amsd)
     plt.plot(amsd)
     plt.show()
     plotTrajectories(drift_corrected_trajectories)
     D = calculateDiffusionParameterFromData(amsd)
-    print(getViscosityFromDiffusionParameter(celsiusToKelvin(21.0), 2 * (10**(-6)), D))
+    viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(21.0), 2 * (10**(-6)), D)
+    print(f'The viscosity is {viscosity} mPA/s')
 
 if __name__ == "__main__":
     '''Module helper.'''
