@@ -7,10 +7,13 @@ import pandas as pd
 import pims
 import trackpy as tp
 from pandas import DataFrame, Series  # for convenience
+from scipy.constants import Boltzmann
 
 VIDEO_PATH = './data/Project data/Video'
 
 CALIBRATION_FACTOR = 1 # TODO: determine
+
+FRAME_RATE = 20 # Frames per second
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -42,11 +45,11 @@ def getMassHistogram(processed_frames, bins: int = 20):
     ax.set(xlabel='mass', ylabel='count')
     plt.show()
 
-def calculateTrajectories(processed_frames, show_plot: bool = False):
+def calculateTrajectories(processed_frames, min_particle_frames_for_trajectory: int = 25):
     '''Calculate raw observed trajectories of tracked particles from annotated frames.'''
     t = tp.link(processed_frames, 5, memory=3)
 
-    t1 = tp.filter_stubs(t, 25)
+    t1 = tp.filter_stubs(t, min_particle_frames_for_trajectory)
     #t1 = t
 
     # Compare the number of particles in the unfiltered and filtered data.
@@ -56,10 +59,6 @@ def calculateTrajectories(processed_frames, show_plot: bool = False):
     #t2 = t1[((t1['mass'] > 50) & (t1['size'] < 2.6) & (t1['ecc'] < 0.3))]
     t2 = t1
 
-    # If show_plot is True, display the trajectory plot
-    if show_plot:
-        tp.plot_traj(t2)
-        plt.show()
     return t2
 
 def calculateOverallDrift(t2, show_plot: bool = False):
@@ -71,10 +70,12 @@ def calculateOverallDrift(t2, show_plot: bool = False):
         plt.show()
     return d
 
-def plotDriftCorrectedTrajectories(t2, d):
+def calculateDriftCorrectedTrajectories(t2, d):
     '''Correct for the overall frame drift in the particle trajecotries and plot them.'''
-    tm = tp.subtract_drift(t2.copy(), d)
-    ax = tp.plot_traj(tm)
+    return tp.subtract_drift(t2.copy(), d)
+
+def plotTrajectories(trajectories):
+    tp.plot_traj(trajectories)
     plt.show()
 
 # Not finished
@@ -82,11 +83,18 @@ def getAnnotatedVideo(frames, processed_frames):
     tp.annotate(processed_frames, frames)
 
 def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories, dimension):
+    return 0
+
+def getAverageMeanSquaredDisplacement(drift_corrected_trajectories):
 
     return 0
 
+def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float):
+    '''Calculates viscosity based on the Stokes-Einstein relation.'''
+    return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius)
+
 # Not finished
-def calculateDiffusionConstantFromData():
+def calculateDiffusionParameterFromData():
     return 0
 
 def main():
@@ -98,9 +106,9 @@ def main():
     f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
     #getMassHistogram(f)
     tp.annotate(f, frames[0])
-    trajectories = calculateTrajectories(processed_frames)
+    trajectories = calculateTrajectories(processed_frames, len(frames))
     drift = calculateOverallDrift(trajectories)
-    plotDriftCorrectedTrajectories(trajectories, drift)
+    plotTrajectories(calculateDriftCorrectedTrajectories(trajectories, drift))
 
 if __name__ == "__main__":
     '''Module helper.'''
