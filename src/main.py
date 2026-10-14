@@ -13,7 +13,7 @@ VIDEO_PATH = './data/Project data/Video'
 
 CALIBRATION_FACTOR = 1 # TODO: determine
 
-FRAME_RATE = 20 # Frames per second
+CAMERA_FRAME_RATE = 20 # Frames per second
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -75,6 +75,7 @@ def calculateDriftCorrectedTrajectories(t2, d):
     return tp.subtract_drift(t2.copy(), d)
 
 def plotTrajectories(trajectories):
+    plt.figure()
     tp.plot_traj(trajectories)
     plt.show()
 
@@ -85,30 +86,40 @@ def getAnnotatedVideo(frames, processed_frames):
 def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories, dimension):
     return 0
 
-def getAverageMeanSquaredDisplacement(drift_corrected_trajectories):
-
-    return 0
-
 def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float):
     '''Calculates viscosity based on the Stokes-Einstein relation.'''
-    return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius)
+    return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius) * 1000
 
 # Not finished
-def calculateDiffusionParameterFromData():
-    return 0
+def calculateDiffusionParameterFromData(average_mean_squared_displacement):
+    tau = average_mean_squared_displacement.index.to_numpy()
+    msd_values = average_mean_squared_displacement.to_numpy() * (10**(-6))**2
+    slope, _ = np.polyfit(tau, msd_values, 1)
+    return slope / 4
+
+def celsiusToKelvin(t: float):
+    return t + 273.15
 
 def main():
     '''Main function.'''
     minmass = 2000
     feature_size = 23
     frames = loadFramesFromVideo("A005 - 20261014_140457.wmv")
+    number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
-    f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
-    getMassHistogram(f)
-    tp.annotate(f, frames[0])
-    trajectories = calculateTrajectories(processed_frames, len(frames))
+    #f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
+    #getMassHistogram(f)
+    #tp.annotate(f, frames[0])
+    trajectories = calculateTrajectories(processed_frames, number_of_frames)
     drift = calculateOverallDrift(trajectories)
-    plotTrajectories(calculateDriftCorrectedTrajectories(trajectories, drift))
+    drift_corrected_trajectories = calculateDriftCorrectedTrajectories(trajectories, drift)
+    amsd = tp.emsd(drift_corrected_trajectories, mpp=0.1, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
+    print(amsd)
+    plt.plot(amsd)
+    plt.show()
+    plotTrajectories(drift_corrected_trajectories)
+    D = calculateDiffusionParameterFromData(amsd)
+    print(getViscosityFromDiffusionParameter(celsiusToKelvin(21.0), 2 * (10**(-6)), D))
 
 if __name__ == "__main__":
     '''Module helper.'''
