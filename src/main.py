@@ -25,9 +25,9 @@ def loadFramesFromVideo(video_name: str):
     '''Load all video frames and conver them to monochrome.'''
     return gray(pims.open(f'{VIDEO_PATH}/{video_name}'))
 
-def processFrames(frames, minmass: int, processes: int = 1, show_plot: bool = False):
+def processFrames(frames, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False):
     '''Annnotate all frames with detected particles.'''
-    f = tp.batch(frames, 23, invert=True, minmass=minmass, processes=processes)
+    f = tp.batch(frames, feature_size, invert=True, minmass=minmass, processes=processes)
     if show_plot: tp.annotate(f, frames[0])
     return f
 
@@ -82,7 +82,7 @@ def getAnnotatedVideo(frames, processed_frames):
     tp.annotate(processed_frames, frames)
 
 def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories, dimension):
-    
+
     return 0
 
 # Not finished
@@ -92,11 +92,12 @@ def calculateDiffusionConstantFromData():
 def main():
     '''Main function.'''
     minmass = 3000
+    feature_size = 23
     frames = loadFramesFromVideo("A005 - 20261014_140457.wmv")
-    processed_frames = processFrames(frames, minmass)
-    #f = tp.locate(frames[0], 23, invert=True, minmass=minmass)
+    processed_frames = processFrames(frames, feature_size, minmass)
+    f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
     #getMassHistogram(f)
-    #tp.annotate(f, frames[0])
+    tp.annotate(f, frames[0])
     trajectories = calculateTrajectories(processed_frames)
     drift = calculateOverallDrift(trajectories)
     plotDriftCorrectedTrajectories(trajectories, drift)
