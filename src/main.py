@@ -46,8 +46,8 @@ def calculateTrajectories(processed_frames, show_plot: bool = False):
     '''Calculate raw observed trajectories of tracked particles from annotated frames.'''
     t = tp.link(processed_frames, 5, memory=3)
 
-    #t1 = tp.filter_stubs(t, 25)
-    t1 = t
+    t1 = tp.filter_stubs(t, 25)
+    #t1 = t
 
     # Compare the number of particles in the unfiltered and filtered data.
     print('Before:', t['particle'].nunique())
@@ -81,21 +81,25 @@ def plotDriftCorrectedTrajectories(t2, d):
 def getAnnotatedVideo(frames, processed_frames):
     tp.annotate(processed_frames, frames)
 
+def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories, dimension):
+    
+    return 0
+
 # Not finished
 def calculateDiffusionConstantFromData():
     return 0
 
 def main():
     '''Main function.'''
-    minmass = 60000
-    frames = loadFramesFromVideo("A004 - 20261009_124708.wmv")
-    #processed_frames = processFrames(frames, minmass)
-    f = tp.locate(frames, 37, invert=True, minmass=minmass)
-    getMassHistogram(f)
-    tp.annotate(f, frames[0])
-    #trajectories = calculateTrajectories(processed_frames)
-    #drift = calculateOverallDrift(trajectories)
-    #plotDriftCorrectedTrajectories(trajectories, drift)
+    minmass = 3000
+    frames = loadFramesFromVideo("A005 - 20261014_140457.wmv")
+    processed_frames = processFrames(frames, minmass)
+    #f = tp.locate(frames[0], 23, invert=True, minmass=minmass)
+    #getMassHistogram(f)
+    #tp.annotate(f, frames[0])
+    trajectories = calculateTrajectories(processed_frames)
+    drift = calculateOverallDrift(trajectories)
+    plotDriftCorrectedTrajectories(trajectories, drift)
 
 if __name__ == "__main__":
     '''Module helper.'''
