@@ -99,12 +99,12 @@ def calculateDiffusionParameterFromData():
 
 def main():
     '''Main function.'''
-    minmass = 3000
+    minmass = 2000
     feature_size = 23
     frames = loadFramesFromVideo("A005 - 20261014_140457.wmv")
     processed_frames = processFrames(frames, feature_size, minmass)
     f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
-    #getMassHistogram(f)
+    getMassHistogram(f)
     tp.annotate(f, frames[0])
     trajectories = calculateTrajectories(processed_frames, len(frames))
     drift = calculateOverallDrift(trajectories)
