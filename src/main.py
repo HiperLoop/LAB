@@ -8,18 +8,34 @@ from scipy.constants import Boltzmann
 
 VIDEO_PATH = './data/Project data/Video'
 
-CALIBRATION_FACTOR: float = 0.13                    # [mpp] Determined using Fiji
+CALIBRATION_FACTOR: float = 0.13                        # [mpp] Determined using Fiji
 
-CAMERA_FRAME_RATE: int = 20                         # Frames per second
+CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
-MINMASS: int = 2000                                 # Minimum mass cutoff used in particle tracking
-FEATURE_SIZE: int = 23                              # Feature size estimate for particle tracking
+TEMPERTURE: float = 21.0                                # Temperature in degrees Celsius during video collection
 
-TEMPERTURE: float = 21.0                            # Temperature in degrees Celsius during video collection
+# Video files to be processed
+VIDEO_PROCESSING_DATA: list[dict[str, int]] = [
+    {
+        "video_file": "A005 - 20261014_140457.wmv",
+        "particle_radius": 2,
+        "feature_size": 23,
+        "minmass": 2000
+    }
+]                                 
+VIDEO_FILES: list[str] = [
+    
+] 
 
-VIDEO_NAME: str = "A005 - 20261014_140457.wmv"      # Name of video to be processed
+                                                        # [micro m] Particle radii in videos
+PARTICLE_RADII: np.ndarray = np.array([
+    2
+])
 
-VERBOSE: bool = False                               # Determines whether intermediate steps are printed in console and figures shown
+MINMASS_LIST: int = 2000                                     # Minimum mass cutoff used in particle tracking
+FEATURE_SIZE_LIST: int = 23                                  # Feature size estimate for particle tracking
+
+VERBOSE: bool = False                                   # Determines whether intermediate steps are printed in console and figures shown
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -122,7 +138,7 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
     drift = calculateOverallDrift(trajectories, plot_drift)
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
-def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
+def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, particle_radius: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
     '''Wrapping all mean squared dsiplacement, diffucion coefficient and viscosity calculation into one function that returns the calculated viscosity at the end.'''
     amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
     if show_amsd_plot:
@@ -131,18 +147,25 @@ def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of
         plt.show()
     if show_trajectories: plotTrajectories(drift_corrected_trajectories)
     D = calculateDiffusionParameterFromData(amsd)
-    viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(temperature), 2 * (10**(-6)), D)
+    viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(temperature), particle_radius * (10**(-6)), D)
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
 
+def calculateAllViscosities(video_files: list[str], radii: np.ndarray, feature_sizes: list[int], minmass_list: list[int]):
+    viscosities: np.ndarray = np.zeros(len(video_files))
+    for i, video in enumerate(video_files):
+        if VERBOSE:
+            trajectories, frames_n = trackedParticletracjectories(video, feature_sizes[i], minmass_list[i], True, True, True, True)
+            viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i], True, True, True)
+        else:
+            trajectories, frames_n = trackedParticletracjectories(video, feature_sizes[i], minmass_list[i])
+            viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i])
+
+    plt.plot(1/radii, viscosities)
+
 def main() -> None:
     '''Main function.'''
-    if VERBOSE:
-        trajectories, frames_n = trackedParticletracjectories(VIDEO_NAME, FEATURE_SIZE, MINMASS, True, True, True, True)
-        viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, True, True, True)
-    else:
-        trajectories, frames_n = trackedParticletracjectories(VIDEO_NAME, FEATURE_SIZE, MINMASS)
-        viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE)
+    calculateAllViscosities(VIDEO_FILES, PARTICLE_RADII)
 
 if __name__ == "__main__":
     '''Module helper.'''
