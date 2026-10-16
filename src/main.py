@@ -1,3 +1,5 @@
+import typing
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,28 +16,24 @@ CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
 TEMPERTURE: float = 21.0                                # Temperature in degrees Celsius during video collection
 
-# Video files to be processed
-VIDEO_PROCESSING_DATA: list[dict[str, int]] = [
-    {
+""" {
         "video_file": "A005 - 20261014_140457.wmv",
         "particle_radius": 2,
         "feature_size": 23,
         "minmass": 2000
+    } """
+
+# Video files to be processed
+VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
+    {
+        "video_file": "A006 - 20261016_114106.wmv",
+        "particle_radius": 0.5,
+        "feature_size": 15,
+        "minmass": 300
     }
 ]                                 
-VIDEO_FILES: list[str] = [
-    
-] 
 
-                                                        # [micro m] Particle radii in videos
-PARTICLE_RADII: np.ndarray = np.array([
-    2
-])
-
-MINMASS_LIST: int = 2000                                     # Minimum mass cutoff used in particle tracking
-FEATURE_SIZE_LIST: int = 23                                  # Feature size estimate for particle tracking
-
-VERBOSE: bool = False                                   # Determines whether intermediate steps are printed in console and figures shown
+VERBOSE: bool = True                                   # Determines whether intermediate steps are printed in console and figures shown
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -151,21 +149,23 @@ def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
 
-def calculateAllViscosities(video_files: list[str], radii: np.ndarray, feature_sizes: list[int], minmass_list: list[int]):
-    viscosities: np.ndarray = np.zeros(len(video_files))
-    for i, video in enumerate(video_files):
+def calculateAllViscosities(video_data: list[dict[str, typing.Any]]):
+    viscosities: np.ndarray = np.zeros(len(video_data))
+    radii: np.ndarray = np.zeros(len(video_data))
+    for i, data in enumerate(video_data):
+        radii[i] = data["particle_radius"]
         if VERBOSE:
-            trajectories, frames_n = trackedParticletracjectories(video, feature_sizes[i], minmass_list[i], True, True, True, True)
+            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], True, True, True, True)
             viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i], True, True, True)
         else:
-            trajectories, frames_n = trackedParticletracjectories(video, feature_sizes[i], minmass_list[i])
+            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"])
             viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i])
 
     plt.plot(1/radii, viscosities)
 
 def main() -> None:
     '''Main function.'''
-    calculateAllViscosities(VIDEO_FILES, PARTICLE_RADII)
+    calculateAllViscosities(VIDEO_PROCESSING_DATA)
 
 if __name__ == "__main__":
     '''Module helper.'''
