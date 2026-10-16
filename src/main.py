@@ -14,7 +14,9 @@ CALIBRATION_FACTOR: float = 0.13                        # [mpp] Determined using
 
 CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
-TEMPERTURE: float = 21.0                                # Temperature in degrees Celsius during video collection
+TEMPERTURE: float = 21.5                                # Temperature in degrees Celsius during video collection
+
+FRAME_LIMIT: int = 30                                   # Number of frames to take from the start of the video and dump the rest. -1 for no limit
 
 """ {
         "video_file": "A005 - 20261014_140457.wmv",
@@ -26,10 +28,10 @@ TEMPERTURE: float = 21.0                                # Temperature in degrees
 # Video files to be processed
 VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
     {
-        "video_file": "A006 - 20261016_114106.wmv",
+        "video_file": "A011 - 20261016_122707.wmv",
         "particle_radius": 0.5,
-        "feature_size": 15,
-        "minmass": 300
+        "feature_size": 17,
+        "minmass": 500
     }
 ]                                 
 
@@ -125,7 +127,7 @@ def celsiusToKelvin(temperature: float) -> float:
 
 def trackedParticletracjectories(video_name: str, feature_size: int, minmass: int, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False) -> tuple[DataFrame, int]:
     '''Wrapping all frame processing and particle tracking into one function that in the end returns the drift-corrected trajectories.'''
-    frames: Series = loadFramesFromVideo(video_name)
+    frames: Series = loadFramesFromVideo(video_name)[:FRAME_LIMIT]
     number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
     if show_mass_histogram or annotate_frame_zero:
