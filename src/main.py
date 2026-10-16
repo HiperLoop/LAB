@@ -26,15 +26,15 @@ mpl.rc('figure',  figsize=(10, 5))
 mpl.rc('image', cmap='gray')
 
 @pims.pipeline  # pyright: ignore[reportUntypedFunctionDecorator, reportAttributeAccessIssue]
-def gray(image: DataFrame) -> DataFrame:
+def gray(image: Series) -> Series:
     '''Make image monochromatic by jsut taking the green channel in the RGB values.'''
     return image[:, :, 1]
 
-def loadFramesFromVideo(video_name: str) -> DataFrame:
+def loadFramesFromVideo(video_name: str) -> Series:
     '''Load all video frames and conver them to monochrome.'''
     return gray(pims.open(f'{VIDEO_PATH}/{video_name}'))
 
-def processFrames(frames: DataFrame, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
+def processFrames(frames: Series, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
     '''Annnotate all frames with detected particles.'''
     processed_frames: DataFrame = tp.batch(frames, feature_size, invert=True, minmass=minmass, processes=processes, )
     if show_plot: tp.annotate(processed_frames, frames[0])
@@ -111,7 +111,7 @@ def celsiusToKelvin(temperature: float) -> float:
 
 def trackedParticletracjectories(video_name: str, feature_size: int, minmass: int, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False) -> tuple[DataFrame, int]:
     '''Wrapping all frame processing and particle tracking into one function that in the end returns the drift-corrected trajectories.'''
-    frames: DataFrame = loadFramesFromVideo(video_name)
+    frames: Series = loadFramesFromVideo(video_name)
     number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
     if show_mass_histogram or annotate_frame_zero:
