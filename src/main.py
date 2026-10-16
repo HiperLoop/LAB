@@ -1,64 +1,61 @@
-from glob import glob  # Used only for instructive purposes
-
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import pims
 import trackpy as tp
-from pandas import DataFrame, Series  # for convenience
+from pandas import DataFrame, Series
 from scipy.constants import Boltzmann
 
 VIDEO_PATH = './data/Project data/Video'
 
-CALIBRATION_FACTOR = 0.13                   # [mpp] Determined using Fiji
+CALIBRATION_FACTOR: float = 0.13                    # [mpp] Determined using Fiji
 
-CAMERA_FRAME_RATE = 20                      # Frames per second
+CAMERA_FRAME_RATE: int = 20                         # Frames per second
 
-MINMASS = 2000                              # Minimum mass cutoff used in particle tracking
-FEATURE_SIZE = 23                           # Feature size estimate for particle tracking
+MINMASS: int = 2000                                 # Minimum mass cutoff used in particle tracking
+FEATURE_SIZE: int = 23                              # Feature size estimate for particle tracking
 
-TEMPERTURE = 21.0                           # Temperature in degrees Celsius during video collection
+TEMPERTURE: float = 21.0                            # Temperature in degrees Celsius during video collection
 
-VIDEO_NAME = "A005 - 20261014_140457.wmv"   # Name of video to be processed
+VIDEO_NAME: str = "A005 - 20261014_140457.wmv"      # Name of video to be processed
 
-VERBOSE = False                             # Determines whether intermediate steps are printed in console and figures shown
+VERBOSE: bool = False                               # Determines whether intermediate steps are printed in console and figures shown
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
 mpl.rc('image', cmap='gray')
 
-@pims.pipeline
-def gray(image):
+@pims.pipeline  # pyright: ignore[reportUntypedFunctionDecorator, reportAttributeAccessIssue]
+def gray(image: DataFrame) -> DataFrame:
     '''Make image monochromatic by jsut taking the green channel in the RGB values.'''
     return image[:, :, 1]
 
-def loadFramesFromVideo(video_name: str):
+def loadFramesFromVideo(video_name: str) -> DataFrame:
     '''Load all video frames and conver them to monochrome.'''
     return gray(pims.open(f'{VIDEO_PATH}/{video_name}'))
 
-def processFrames(frames, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False):
+def processFrames(frames: DataFrame, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
     '''Annnotate all frames with detected particles.'''
-    processed_frames = tp.batch(frames, feature_size, invert=True, minmass=minmass, processes=processes, )
+    processed_frames: DataFrame = tp.batch(frames, feature_size, invert=True, minmass=minmass, processes=processes, )
     if show_plot: tp.annotate(processed_frames, frames[0])
     return processed_frames
 
-def displayFrame(frame):
+def displayFrame(frame: DataFrame):
     '''Display a single frame.'''
     plt.imshow(frame)
 
-def plotMassHistogram(processed_frames, bins: int = 20):
+def plotMassHistogram(processed_frames: DataFrame, bins: int = 20) -> None:
     '''Generate and display mass histogram based on all annotated video frames.'''
     _, ax = plt.subplots()
     ax.hist(processed_frames['mass'], bins=bins)
     ax.set(xlabel='mass', ylabel='count')
     plt.show()
 
-def calculateTrajectories(processed_frames, min_particle_frames_for_trajectory: int = 25, print_before_after_trajectories: bool = False):
+def calculateTrajectories(processed_frames: DataFrame, min_particle_frames_for_trajectory: int = 25, print_before_after_trajectories: bool = False) -> DataFrame:
     '''Calculate raw observed trajectories of tracked particles from annotated frames.'''
-    trajectories = tp.link(processed_frames, 5, memory=3)
+    trajectories: DataFrame = tp.link(processed_frames, 5, memory=3)
 
-    trajectories_present_in_all_frames  = tp.filter_stubs(trajectories, min_particle_frames_for_trajectory)
+    trajectories_present_in_all_frames: DataFrame = tp.filter_stubs(trajectories, min_particle_frames_for_trajectory)
 
     # Compare the number of particles in the unfiltered and filtered data.
     if print_before_after_trajectories:
@@ -70,64 +67,64 @@ def calculateTrajectories(processed_frames, min_particle_frames_for_trajectory: 
 
     return trajectories_present_in_all_frames
 
-def calculateOverallDrift(trajectories, show_plot: bool = False):
+def calculateOverallDrift(trajectories: DataFrame, show_plot: bool = False) -> DataFrame:
     '''Calcualte the drift of the whole frame based on particle trajectories.'''
-    drift = tp.compute_drift(trajectories)
+    drift: DataFrame = tp.compute_drift(trajectories)
     # If show_plot is True, display the plot of ovelall frame drift
     if show_plot:
         drift.plot()
         plt.show()
     return drift
 
-def calculateDriftCorrectedTrajectories(trajectories, drift):
+def calculateDriftCorrectedTrajectories(trajectories: DataFrame, drift: DataFrame) -> DataFrame:
     '''Correct for the overall frame drift in the particle trajecotries and plot them.'''
     return tp.subtract_drift(trajectories.copy(), drift)
 
-def plotTrajectories(trajectories):
+def plotTrajectories(trajectories: DataFrame) -> None:
     '''Plots trajectories generated by tackpy.'''
     plt.figure()
     tp.plot_traj(trajectories)
     plt.show()
 
 # Not finished
-def getAnnotatedVideo(frames, processed_frames):
+def getAnnotatedVideo(frames: DataFrame, processed_frames: DataFrame):
     tp.annotate(processed_frames, frames)
 
 # Not finished
-def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories, dimension):
+def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories: DataFrame, dimension: int):
     return 0
 
-def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float):
+def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float) -> float:
     '''Calculates viscosity based on the Stokes-Einstein relation.'''
     return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius) * 1000
 
-def calculateDiffusionParameterFromData(average_mean_squared_displacement):
+def calculateDiffusionParameterFromData(average_mean_squared_displacement: Series) -> float:
     '''Uses the slope of the average mean squared displacement over time to calculate the Diffusion parameter. To get the slope a linear fit through the data is used.'''
     tau = average_mean_squared_displacement.index.to_numpy()
     msd_values = average_mean_squared_displacement.to_numpy() * (10**(-6))**2
     slope, _ = np.polyfit(tau, msd_values, 1)
     return slope / 4
 
-def celsiusToKelvin(temperature: float):
+def celsiusToKelvin(temperature: float) -> float:
     '''Converts temperature from degrees Celsius to Kelvins'''
     return temperature + 273.15
 
-def trackedParticletracjectories(video_name: str, feature_size, minmass, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False):
+def trackedParticletracjectories(video_name: str, feature_size: int, minmass: int, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False) -> tuple[DataFrame, int]:
     '''Wrapping all frame processing and particle tracking into one function that in the end returns the drift-corrected trajectories.'''
-    frames = loadFramesFromVideo(video_name)
+    frames: DataFrame = loadFramesFromVideo(video_name)
     number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
     if show_mass_histogram or annotate_frame_zero:
-        f = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
+        f: DataFrame = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
         if show_mass_histogram: plotMassHistogram(f)
         if annotate_frame_zero: tp.annotate(f, frames[0])
     trajectories = calculateTrajectories(processed_frames, number_of_frames, print_filter)
     drift = calculateOverallDrift(trajectories, plot_drift)
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
-def viscosityFromTrajectories(drift_corrected_trajectories, number_of_frames: int, temperature: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True):
+def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
     '''Wrapping all mean squared dsiplacement, diffucion coefficient and viscosity calculation into one function that returns the calculated viscosity at the end.'''
-    amsd = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
+    amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
     if show_amsd_plot:
         plt.figure()
         plt.plot(amsd)
@@ -138,7 +135,7 @@ def viscosityFromTrajectories(drift_corrected_trajectories, number_of_frames: in
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
 
-def main():
+def main() -> None:
     '''Main function.'''
     if VERBOSE:
         trajectories, frames_n = trackedParticletracjectories(VIDEO_NAME, FEATURE_SIZE, MINMASS, True, True, True, True)
