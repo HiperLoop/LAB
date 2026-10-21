@@ -8,7 +8,7 @@ import trackpy as tp
 from pandas import DataFrame, Series
 from scipy.constants import Boltzmann
 
-VIDEO_PATH = './data/Project data/Video'
+VIDEO_PATH = './data/Adam Data/Video'
 
 CALIBRATION_FACTOR: float = 0.13                        # [mpp] Determined using Fiji
 
@@ -151,7 +151,7 @@ def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
 
-def calculateAllViscosities(video_data: list[dict[str, typing.Any]]):
+def calculateAllViscosities(video_data: list[dict[str, typing.Any]]) -> None:
     viscosities: np.ndarray = np.zeros(len(video_data))
     radii: np.ndarray = np.zeros(len(video_data))
     for i, data in enumerate(video_data):
