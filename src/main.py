@@ -14,9 +14,9 @@ CALIBRATION_FACTOR: float = 0.13                        # [mpp] Determined using
 
 CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
-TEMPERTURE: float = 21.5                                # Temperature in degrees Celsius during video collection
+TEMPERTURE: float = 20.9                                # Temperature in degrees Celsius during video collection
 
-FRAME_LIMIT: int = 30                                   # Number of frames to take from the start of the video and dump the rest. -1 for no limit
+FRAME_LIMIT: int = 60                                   # Number of frames to take from the start of the video and dump the rest. -1 for no limit
 
 """ {
         "video_file": "A005 - 20261014_140457.wmv",
@@ -25,17 +25,125 @@ FRAME_LIMIT: int = 30                                   # Number of frames to ta
         "minmass": 2000
     } """
 
+
+""" {
+        "video_file": "A002 - 20261021_140146.wmv",
+        "particle_radius": 1.5,
+        "feature_size": 17,
+        "minmass": 2000
+    }, """
+
+""" {
+        "video_file": "A003 - 20261021_141507.wmv",
+        "particle_radius": 1,
+        "feature_size": 17,
+        "minmass": 600
+    }, """
+
+""" {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 550
+    }, """
+
+""" {
+        "video_file": "A002 - 20261021_140146.wmv",
+        "particle_radius": 1.5,
+        "feature_size": 17,
+        "minmass": 2000
+    },
+    {
+        "video_file": "A003 - 20261021_141507.wmv",
+        "particle_radius": 1,
+        "feature_size": 17,
+        "minmass": 600
+    },
+    {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 550
+    }, """
+
+""" {
+        "video_file": "A018 - 20261021_155449.wmv",
+        "particle_radius": 2,
+        "feature_size": 17,
+        "minmass": 1500
+    },
+    {
+        "video_file": "A002 - 20261021_140146.wmv",
+        "particle_radius": 1.5,
+        "feature_size": 17,
+        "minmass": 2000
+    },
+    {
+        "video_file": "A003 - 20261021_141507.wmv",
+        "particle_radius": 1,
+        "feature_size": 17,
+        "minmass": 600
+    },
+    {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 550
+    }, """
+
+""" {
+        "video_file": "A032 - 20261021_161942.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 1000
+    },
+    {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 550
+    }, """
 # Video files to be processed
 VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
     {
-        "video_file": "A011 - 20261016_122707.wmv",
-        "particle_radius": 0.5,
+        "video_file": "A018 - 20261021_155449.wmv",
+        "particle_radius": 2,
+        "feature_size": 17,
+        "minmass": 1500
+    },
+    {
+        "video_file": "A002 - 20261021_140146.wmv",
+        "particle_radius": 1.5,
+        "feature_size": 17,
+        "minmass": 2000
+    },
+    {
+        "video_file": "A003 - 20261021_141507.wmv",
+        "particle_radius": 1,
+        "feature_size": 17,
+        "minmass": 600
+    },
+    {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 550
+    },
+    {
+        "video_file": "A032 - 20261021_161942.wmv",
+        "particle_radius": 0.75,
+        "feature_size": 17,
+        "minmass": 1000
+    },
+    {
+        "video_file": "A038 - 20261021_163829.wmv",
+        "particle_radius": 1,
         "feature_size": 17,
         "minmass": 500
-    }
+    },
 ]                                 
 
-VERBOSE: bool = True                                   # Determines whether intermediate steps are printed in console and figures shown
+VERBOSE: bool = True                                    # Determines whether intermediate steps are printed in console and figures shown
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -114,12 +222,12 @@ def getViscosityFromDiffusionParameter(temperature: float, particle_radius: floa
     '''Calculates viscosity based on the Stokes-Einstein relation.'''
     return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius) * 1000
 
-def calculateDiffusionParameterFromData(average_mean_squared_displacement: Series) -> float:
+def calculateDiffusionParameterFromData(average_mean_squared_displacement: Series) -> tuple[float, float]:
     '''Uses the slope of the average mean squared displacement over time to calculate the Diffusion parameter. To get the slope a linear fit through the data is used.'''
     tau = average_mean_squared_displacement.index.to_numpy()
     msd_values = average_mean_squared_displacement.to_numpy() * (10**(-6))**2
-    slope, _ = np.polyfit(tau, msd_values, 1)
-    return slope / 4
+    slope, offset = np.polyfit(tau, msd_values, 1)
+    return slope / 4, offset
 
 def celsiusToKelvin(temperature: float) -> float:
     '''Converts temperature from degrees Celsius to Kelvins'''
@@ -140,13 +248,13 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
 
 def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, particle_radius: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
     '''Wrapping all mean squared dsiplacement, diffucion coefficient and viscosity calculation into one function that returns the calculated viscosity at the end.'''
-    amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames)
+    amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames//4)
     if show_amsd_plot:
         plt.figure()
         plt.plot(amsd)
         plt.show()
     if show_trajectories: plotTrajectories(drift_corrected_trajectories)
-    D = calculateDiffusionParameterFromData(amsd)
+    D, offset = calculateDiffusionParameterFromData(amsd)
     viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(temperature), particle_radius * (10**(-6)), D)
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
@@ -163,7 +271,11 @@ def calculateAllViscosities(video_data: list[dict[str, typing.Any]]) -> None:
             trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"])
             viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i])
 
-    plt.plot(1/radii, viscosities)
+    plt.figure()
+    plt.plot(1/radii, viscosities, marker="o")
+    plt.plot([0, 2.5], [0, 2.5])
+    plt.title("viscosity against 1/radius")
+    plt.show()
 
 def main() -> None:
     '''Main function.'''
