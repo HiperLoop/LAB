@@ -16,134 +16,77 @@ CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
 TEMPERTURE: float = 20.9                                # Temperature in degrees Celsius during video collection
 
-FRAME_LIMIT: int = 60                                   # Number of frames to take from the start of the video and dump the rest. -1 for no limit
-
-""" {
-        "video_file": "A005 - 20261014_140457.wmv",
-        "particle_radius": 2,
-        "feature_size": 23,
-        "minmass": 2000
-    } """
-
-
-""" {
-        "video_file": "A002 - 20261021_140146.wmv",
-        "particle_radius": 1.5,
-        "feature_size": 17,
-        "minmass": 2000
-    }, """
-
-""" {
-        "video_file": "A003 - 20261021_141507.wmv",
-        "particle_radius": 1,
-        "feature_size": 17,
-        "minmass": 600
-    }, """
-
-""" {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_radius": 0.75,
-        "feature_size": 17,
-        "minmass": 550
-    }, """
-
-""" {
-        "video_file": "A002 - 20261021_140146.wmv",
-        "particle_radius": 1.5,
-        "feature_size": 17,
-        "minmass": 2000
-    },
+OLD_DATA: list[dict[str, typing.Any]] = [
     {
-        "video_file": "A003 - 20261021_141507.wmv",
-        "particle_radius": 1,
-        "feature_size": 17,
-        "minmass": 600
-    },
-    {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_radius": 0.75,
-        "feature_size": 17,
-        "minmass": 550
-    }, """
-
-""" {
         "video_file": "A018 - 20261021_155449.wmv",
-        "particle_radius": 2,
+        "particle_diameter": 2,
         "feature_size": 17,
-        "minmass": 1500
+        "minmass": 1500,
+        "frame_limit": 60
     },
     {
         "video_file": "A002 - 20261021_140146.wmv",
-        "particle_radius": 1.5,
+        "particle_diameter": 1.5,
         "feature_size": 17,
-        "minmass": 2000
+        "minmass": 2000,
+        "frame_limit": 60
     },
     {
         "video_file": "A003 - 20261021_141507.wmv",
-        "particle_radius": 1,
+        "particle_diameter": 1,
         "feature_size": 17,
-        "minmass": 600
+        "minmass": 600,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A042 - 20261023_110455.wmv",
+        "particle_diameter": 1,
+        "feature_size": 17,
+        "minmass": 2000,
+        "frame_limit": 80
     },
     {
         "video_file": "A006 - 20261021_144131.wmv",
-        "particle_radius": 0.75,
+        "particle_diameter": 0.75,
         "feature_size": 17,
-        "minmass": 550
-    }, """
-
-""" {
+        "minmass": 550,
+        "frame_limit": 60
+    },
+    {
         "video_file": "A032 - 20261021_161942.wmv",
-        "particle_radius": 0.75,
+        "particle_diameter": 0.75,
         "feature_size": 17,
-        "minmass": 1000
+        "minmass": 1000,
+        "frame_limit": 60
     },
     {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_radius": 0.75,
+        "video_file": "A050 - 20261023_112259.wmv",
+        "particle_diameter": 1.5,
         "feature_size": 17,
-        "minmass": 550
-    }, """
+        "minmass": 1500,
+        "frame_limit": -1
+    }
+]
+
 # Video files to be processed
 VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
     {
         "video_file": "A018 - 20261021_155449.wmv",
-        "particle_radius": 2,
+        "particle_diameter": 2,
         "feature_size": 17,
-        "minmass": 1500
+        "minmass": 1500,
+        "frame_limit": -1
     },
     {
-        "video_file": "A002 - 20261021_140146.wmv",
-        "particle_radius": 1.5,
-        "feature_size": 17,
-        "minmass": 2000
-    },
-    {
-        "video_file": "A003 - 20261021_141507.wmv",
-        "particle_radius": 1,
-        "feature_size": 17,
-        "minmass": 600
-    },
-    {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_radius": 0.75,
-        "feature_size": 17,
-        "minmass": 550
-    },
-    {
-        "video_file": "A032 - 20261021_161942.wmv",
-        "particle_radius": 0.75,
-        "feature_size": 17,
-        "minmass": 1000
-    },
-    {
-        "video_file": "A038 - 20261021_163829.wmv",
-        "particle_radius": 1,
-        "feature_size": 17,
-        "minmass": 500
-    },
+        "video_file": "A057 - 20261023_115737.wmv",
+        "particle_diameter": 2,
+        "feature_size": 27,
+        "minmass": 2000,
+        "frame_limit": -1
+    }
 ]                                 
 
-VERBOSE: bool = True                                    # Determines whether intermediate steps are printed in console and figures shown
+VERBOSE: bool = False                                    # Determines whether intermediate steps are printed in console and figures shown
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -160,7 +103,7 @@ def loadFramesFromVideo(video_name: str) -> Series:
 
 def processFrames(frames: Series, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
     '''Annnotate all frames with detected particles.'''
-    processed_frames: DataFrame = tp.batch(frames, feature_size, invert=True, minmass=minmass, processes=processes, )
+    processed_frames: DataFrame = tp.batch(list(frames), feature_size, invert=True, minmass=minmass)
     if show_plot: tp.annotate(processed_frames, frames[0])
     return processed_frames
 
@@ -186,10 +129,17 @@ def calculateTrajectories(processed_frames: DataFrame, min_particle_frames_for_t
         print('Before:', trajectories['particle'].nunique())
         print('After:', trajectories_present_in_all_frames['particle'].nunique())
 
-    #t2 = t1[((t1['mass'] > 50) & (t1['size'] < 2.6) & (t1['ecc'] < 0.3))]
-    #t2 = t1
+    def has_moved(group: DataFrame) -> bool:
+        dx = group['x'].iloc[-1] - group['x'].iloc[0]
+        dy = group['y'].iloc[-1] - group['y'].iloc[0]
+        displacement = (dx**2 + dy**2)**0.5
+        return displacement > 1
 
-    return trajectories_present_in_all_frames
+    #print(trajectories_present_in_all_frames)
+
+    moving_trajectories: DataFrame = trajectories_present_in_all_frames.groupby('particle').filter(has_moved)
+
+    return moving_trajectories
 
 def calculateOverallDrift(trajectories: DataFrame, show_plot: bool = False) -> DataFrame:
     '''Calcualte the drift of the whole frame based on particle trajectories.'''
@@ -218,9 +168,9 @@ def getAnnotatedVideo(frames: DataFrame, processed_frames: DataFrame):
 def getOneDimensionalDeltaTimeProbability(drift_corrected_trajectories: DataFrame, dimension: int):
     return 0
 
-def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float) -> float:
+def getViscosityFromDiffusionParameter(temperature: float, particle_diameter: float, diffusion_parameter: float) -> float:
     '''Calculates viscosity based on the Stokes-Einstein relation.'''
-    return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * particle_radius) * 1000
+    return (Boltzmann * temperature) / (6 * np.pi * diffusion_parameter * (particle_diameter / 2)) * 1000
 
 def calculateDiffusionParameterFromData(average_mean_squared_displacement: Series) -> tuple[float, float]:
     '''Uses the slope of the average mean squared displacement over time to calculate the Diffusion parameter. To get the slope a linear fit through the data is used.'''
@@ -233,29 +183,39 @@ def celsiusToKelvin(temperature: float) -> float:
     '''Converts temperature from degrees Celsius to Kelvins'''
     return temperature + 273.15
 
-def trackedParticletracjectories(video_name: str, feature_size: int, minmass: int, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False) -> tuple[DataFrame, int]:
+def trackedParticletracjectories(video_name: str, feature_size: int, minmass: int, frame_limit: int, show_mass_histogram: bool = False, annotate_frame_zero: bool = False, plot_drift: bool = False, print_filter: bool = False) -> tuple[DataFrame, int]:
     '''Wrapping all frame processing and particle tracking into one function that in the end returns the drift-corrected trajectories.'''
-    frames: Series = loadFramesFromVideo(video_name)[:FRAME_LIMIT]
+    frames: Series = loadFramesFromVideo(video_name)[:frame_limit]
     number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
     if show_mass_histogram or annotate_frame_zero:
-        f: DataFrame = tp.locate(frames[0], feature_size, invert=True, minmass=minmass)
-        if show_mass_histogram: plotMassHistogram(f)
-        if annotate_frame_zero: tp.annotate(f, frames[0])
-    trajectories = calculateTrajectories(processed_frames, number_of_frames, print_filter)
+        for i in range(1):
+            f: DataFrame = tp.locate(frames[i], feature_size, invert=True, minmass=minmass)
+            if show_mass_histogram: plotMassHistogram(f)
+            if annotate_frame_zero: tp.annotate(f, frames[i])
+    trajectories = calculateTrajectories(processed_frames, number_of_frames//4, print_filter)
     drift = calculateOverallDrift(trajectories, plot_drift)
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
-def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, particle_radius: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
+def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, particle_diameter: float, show_amsd_plot: bool = False, show_trajectories : bool = False, print_viscosity: bool = True) -> float:
     '''Wrapping all mean squared dsiplacement, diffucion coefficient and viscosity calculation into one function that returns the calculated viscosity at the end.'''
     amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames//4)
+    D, offset = calculateDiffusionParameterFromData(amsd)
     if show_amsd_plot:
         plt.figure()
-        plt.plot(amsd)
+        plt.subplot(121)
+        plt.scatter(amsd.index, amsd.values, color='blue', s=20, label='Data points')
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.title("MSD, time log log plot")
+        plt.subplot(122)
+        plt.scatter(amsd.index, amsd.values, color='green', s=20, label='Data points')
+        plt.plot(amsd.index, (4*D*amsd.index + offset) * 10**12, color='red', linestyle='--', label='Linear fit')
+        plt.title("MSD, time lienar plot")
+        plt.legend()
         plt.show()
     if show_trajectories: plotTrajectories(drift_corrected_trajectories)
-    D, offset = calculateDiffusionParameterFromData(amsd)
-    viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(temperature), particle_radius * (10**(-6)), D)
+    viscosity = getViscosityFromDiffusionParameter(celsiusToKelvin(temperature), particle_diameter * (10**(-6)), D)
     if print_viscosity: print(f'The viscosity is {viscosity} mPa/s')
     return viscosity
 
@@ -263,16 +223,16 @@ def calculateAllViscosities(video_data: list[dict[str, typing.Any]]) -> None:
     viscosities: np.ndarray = np.zeros(len(video_data))
     radii: np.ndarray = np.zeros(len(video_data))
     for i, data in enumerate(video_data):
-        radii[i] = data["particle_radius"]
+        radii[i] = data["particle_diameter"]/2
         if VERBOSE:
-            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], True, True, True, True)
+            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"], True, True, True, True)
             viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i], True, True, True)
         else:
-            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"])
+            trajectories, frames_n = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"])
             viscosities[i] = viscosityFromTrajectories(trajectories, frames_n, TEMPERTURE, radii[i])
 
     plt.figure()
-    plt.plot(1/radii, viscosities, marker="o")
+    plt.scatter(1/radii, viscosities, marker="o")
     plt.plot([0, 2.5], [0, 2.5])
     plt.title("viscosity against 1/radius")
     plt.show()
