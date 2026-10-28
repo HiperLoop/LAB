@@ -16,6 +16,15 @@ CALIBRATION_FACTOR: float = 0.13                        # [mpp] Determined using
 CAMERA_FRAME_RATE: int = 20                             # Frames per second
 
 TEMPERTURE: float = 20.9                                # Temperature in degrees Celsius during video collection
+TEMPERATURE_ABSOLUTE_UNCERTAINTY: float = 0.1           # Absolute temperature uncertainty
+
+PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
+    0.51: 0.02,
+    0.746: 0.03,
+    1.06: 0.01,
+    1.54: 0.04,
+    2.06: 0.02
+}
 
 OLD_DATA: list[dict[str, typing.Any]] = [
     {
@@ -69,15 +78,9 @@ OLD_DATA: list[dict[str, typing.Any]] = [
     }
 ]
 
-""" {
-        "video_file": "A057 - 20261023_115737.wmv",
-        "particle_diameter": 2,
-        "feature_size": 27,
-        "minmass": 2000,
-        "frame_limit": 60
-    } """
-
-""" {
+# Video files to be processed
+VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
+    {
         "video_file": "A018 - 20261021_155449.wmv",
         "particle_diameter": 2,
         "feature_size": 17,
@@ -85,7 +88,7 @@ OLD_DATA: list[dict[str, typing.Any]] = [
         "frame_limit": 60
     },
     {
-        "video_file": "A002 - 20261021_160146.wmv",
+        "video_file": "A002 - 20261021_140146.wmv",
         "particle_diameter": 1.5,
         "feature_size": 17,
         "minmass": 2000,
@@ -118,10 +121,7 @@ OLD_DATA: list[dict[str, typing.Any]] = [
         "feature_size": 17,
         "minmass": 1000,
         "frame_limit": 60
-    }, """
-
-# Video files to be processed
-VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
+    },
     {
         "video_file": "A072 - 20261023_123706.wmv",
         "particle_diameter": 0.75,
@@ -419,6 +419,12 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
     drift = calculateOverallDrift(trajectories, plot_drift)
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
+def calculateVicosity_uncertainty(viscosity: float, diffusion_coeficient: float, diffusion_absolute_uncertainty: float, particle_radius: float):
+    relative_temperature_uncertainty: float = TEMPERATURE_ABSOLUTE_UNCERTAINTY / celsiusToKelvin(TEMPERTURE)
+    relative_diffusion_uncertainty: float = diffusion_absolute_uncertainty / diffusion_coeficient
+    relative_particle_radius_uncertainty: float = 0.5 * []
+
+
 def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of_frames: int, temperature: float, particle_radius: float, show_amsd_plot: bool = False, show_trajectories : bool = False) -> float:
     '''Wrapping all mean squared dsiplacement, diffucion coefficient and viscosity calculation into one function that returns the calculated viscosity at the end.'''
     amsd: Series = tp.emsd(drift_corrected_trajectories, mpp=CALIBRATION_FACTOR, fps=CAMERA_FRAME_RATE, max_lagtime=number_of_frames//4)
@@ -463,7 +469,9 @@ def calculateAllViscosities(video_data: list[dict[str, typing.Any]]) -> None:
     plt.figure()
     plt.scatter(1/radii, viscosities, marker="o")
     #plt.plot([0, 2.5], [0, 2.5])
-    plt.title("viscosity against 1/radius")
+    plt.title("Viscosity calculations for differently sized particles")
+    plt.xlabel("1/(particle radius)")
+    plt.ylabel("Viscosity")
     plt.show()
 
 def main() -> None:
