@@ -3,7 +3,7 @@
 # The video has 126 frames at 20 fps.
 # Measurement data:
 # Particle diameter: 2.06 +- 0.02%.
-# Temperature during measurement: 294.04999999999995 +- 0.1 K.
+# Temperature during measurement: 294.15 +- 0.1 K.
 # Micrometer to pixel calibration: 0.13 +- 0.003.
 # Tracking parameters:
 # Feature size: 17.
@@ -12,7 +12,7 @@
 # ================================================================================================
 #
 frames, fps, particle_diameter, diameter_uncertainty, temperature, mmp, mmp_u, feature_size, minmass, visible_frames
-126, 20, 2.06, 0.02, 294.04999999999995, 0.13, 0.003, 17, 1500, 7
+126, 20, 2.06, 0.02, 294.15, 0.13, 0.003, 17, 1500, 7
 #
 y,x,mass,size,ecc,signal,raw_mass,ep,frame,particle
 35.763712536255234,241.8419593941347,3749.345911972267,4.812380638746457,0.4099354038724386,54.6150290754581,28740.0,0.11229841377351246,0,0

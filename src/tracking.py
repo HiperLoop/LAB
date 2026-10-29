@@ -1,6 +1,4 @@
-import csv
 import os
-import typing
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -8,8 +6,8 @@ import pims
 import trackpy as tp
 from pandas import DataFrame, Series
 
-SAVE_PATH: str = ""
-VIDEO_PATH: str = './data/Adam Data/Video'
+SAVE_PATH: str = "./csv_data/"
+VIDEO_PATH: str = './data/Adam Data/Video/'
 
 PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
     2: 0.02,
@@ -18,184 +16,6 @@ PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
     6: 0.04,
     8: 0.02
 }
-
-VIDEO_PROCESSING_DATA: list[dict[str, typing.Any]] = [
-    {
-        "video_file": "A018 - 20261021_155449.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A002 - 20261021_140146.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A003 - 20261021_141507.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 600,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A042 - 20261023_110455.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 80
-    },
-    {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 17,
-        "minmass": 550,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A032 - 20261021_161942.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 17,
-        "minmass": 1000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A072 - 20261023_123706.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A073 - 20261023_123735.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A076 - 20261023_123837.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A080 - 20261023_123959.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A064 - 20261023_123011.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A065 - 20261023_123030.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A068 - 20261023_123138.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A069 - 20261023_123205.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A050 - 20261023_112259.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 40
-    },
-    {
-        "video_file": "A058 - 20261023_121301.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A059 - 20261023_121310.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A060 - 20261023_121408.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A061 - 20261023_121415.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A062 - 20261023_122547.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A063 - 20261023_122603 - last 1.5.wmv",
-        "particle_diameter": 1.54,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A052 - 20261023_114819.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 15,
-        "minmass": 1000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A053 - 20261023_114827.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A056 - 20261023_115426.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A057 - 20261023_115737 - last 2.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-]              
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -212,7 +32,7 @@ def celsiusToKelvin(temperature: float) -> float:
 
 def loadFramesFromVideo(video_name: str) -> Series:
     '''Load all video frames and conver them to monochrome.'''
-    return gray(pims.open(f'{VIDEO_PATH}/{video_name}'))
+    return gray(pims.open(f'{VIDEO_PATH}{video_name}'))
 
 def processFrames(frames: Series, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
     '''Annnotate all frames with detected particles.'''
@@ -274,8 +94,6 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
     number_of_frames = len(frames)
     processed_frames = processFrames(frames, feature_size, minmass)
 
-    #getAnnotatedVideo(frames, processed_frames, output_filename=f"annotated_{video_name.replace('.wmv', '.mp4')}")
-
     if show_mass_histogram or annotate_frame_zero:
         for i in range(1):
             f: DataFrame = tp.locate(frames[i], feature_size, invert=True, minmass=minmass)
@@ -286,7 +104,6 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
 def generateCSV(file_name: str, video_file: str, particle_diameter: float, visible_frames: int, feature_size: int, minmass: int, temperature: float, mmp: float, mmp_u: float, fps: int, frames: int, trajectories: DataFrame):
-    #os.makedirs(SAVE_PATH, exist_ok=True)
     file_path = os.path.join(SAVE_PATH, f'{file_name.split(".")[0]}.csv')
 
     particel_diameter_u: float = PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES[int(particle_diameter * 4)]
@@ -316,9 +133,9 @@ def main() -> None:
     VERBOSE = input("Plot intermediate graphs? (Y/n)").lower() != "n"
     particle_diameter: float = float(input("Particle diameter: "))
     temperature: float = float(input("temperature: "))
-    mmp: float = float(input("Milimeters per pixel: "))
-    mmp_u: float = float(input("Milimeters per pixel uncertainty: "))
-    camera_fps: int = int(input("Camera fps: "))
+    mmp: float = 0.130
+    mmp_u: float = 0.003
+    camera_fps: int = 20
     video: str = input("Video file: ")
     feature_size: int = int(input("Feature size: "))
     minmass: int = int(input("Minmass: "))

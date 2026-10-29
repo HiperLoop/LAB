@@ -1,6 +1,3 @@
-import typing
-
-import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -19,10 +16,36 @@ TEMPERATURE_ABSOLUTE_UNCERTAINTY: float = 0.1           # Absolute temperature u
 
 VERBOSE: bool = False                                    # Determines whether intermediate steps are printed in console and figures shown
 
-DATA_PATH: str = ""
+DATA_PATH: str = "./csv_data/"
+
+""" ["A018 - 20261021_155449.csv", 60],
+    ["A002 - 20261021_140146.csv", 60],
+    ["A003 - 20261021_141507.csv", 60],
+    ["A042 - 20261023_110455.csv", 80],
+    ["A006 - 20261021_144131.csv", 60],
+    ["A032 - 20261021_161942.csv", 60],
+    
+    ["A076 - 20261023_123837.csv", 60],
+    ["A080 - 20261023_123959.csv", 60],
+    ["A064 - 20261023_123011.csv", 60],
+    ["A065 - 20261023_123030.csv", 60],
+    ["A068 - 20261023_123138.csv", 60],
+    ["A069 - 20261023_123205.csv", 60],
+    ["A050 - 20261023_112259.csv", 40],
+    ["A058 - 20261023_121301.csv", 60],
+    ["A059 - 20261023_121310.csv", 60],
+    ["A060 - 20261023_121408.csv", 60],
+    ["A061 - 20261023_121415.csv", 60],
+    ["A062 - 20261023_122547.csv", 60],
+    ["A063 - 20261023_122603 - last 1.csv", 60],
+    ["A052 - 20261023_114819.csv", 50],
+    ["A053 - 20261023_114827.csv", 60],
+    ["A056 - 20261023_115426.csv", 60],
+    ["A057 - 20261023_115737 - last 2.csv", 60] """
 
 CSV_FILES: list[list[str | int]] = [
-    ["A018 - 20261021_155449.csv", 40]
+    ["A072 - 20261023_123706.csv", 60],
+    ["A073 - 20261023_123735.csv", 60],
 ]
 
 def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float) -> float:
@@ -85,9 +108,7 @@ def getDataFromCSV(csv_file: str, frame_limit: int) -> tuple[DataFrame, int, int
     new_labels: list[str] = data_frame.iloc[1].tolist()
     data_frame: DataFrame = data_frame[2:].astype('float64')
     data_frame.columns = new_labels
-    #print(meta_data)
-    #print(data_frame)
-    return data_frame[:frame_limit], meta_data[0], meta_data[1], meta_data[2], meta_data[3], meta_data[4], TEMPERATURE_ABSOLUTE_UNCERTAINTY, meta_data[5], meta_data[6]
+    return data_frame[:np.where(data_frame['frame'] >= frame_limit+1)[0][0]], meta_data[0], meta_data[1], meta_data[2], meta_data[3], meta_data[4], TEMPERATURE_ABSOLUTE_UNCERTAINTY, meta_data[5], meta_data[6]
 
 def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
     data_length: int = len(csv_data)
@@ -108,7 +129,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
             else:
                 viscosities[i], viscosity_uncertainties[i] = viscosityFromTrajectories(trajectories, int(frames_n), int(fps), float(particle_diameter), float(diameter_uncertainty), float(temperature), float(temperature_uncertainty), float(mmp), float(mmp_uncertainty))
 
-        print(f'The viscosity of video {(i+1)/data_length} is {viscosities[i]} +- {viscosity_uncertainties[i]} mPa/s')
+        print(f'{(i+1)}/{data_length} The viscosity of video {data[0]} is {viscosities[i]} +- {viscosity_uncertainties[i]} mPa/s')
 
     plt.figure()
     plt.errorbar(1/radii, viscosities, viscosity_uncertainties, marker="o", linestyle='')
