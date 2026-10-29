@@ -1,4 +1,5 @@
 import os
+import typing
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -16,6 +17,142 @@ PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
     6: 0.04,
     8: 0.02
 }
+
+VIDEO_DATA: list[dict[str, typing.Any]] = [
+    {
+        "video_file": "A072 - 20261023_123706.wmv",
+        "particle_diameter": 0.75,
+        "feature_size": 9,
+        "minmass": 500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A073 - 20261023_123735.wmv",
+        "particle_diameter": 0.75,
+        "feature_size": 9,
+        "minmass": 500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A076 - 20261023_123837.wmv",
+        "particle_diameter": 0.75,
+        "feature_size": 9,
+        "minmass": 500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A080 - 20261023_123959.wmv",
+        "particle_diameter": 0.75,
+        "feature_size": 9,
+        "minmass": 500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A064 - 20261023_123011.wmv",
+        "particle_diameter": 1,
+        "feature_size": 17,
+        "minmass": 1500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A065 - 20261023_123030.wmv",
+        "particle_diameter": 1,
+        "feature_size": 17,
+        "minmass": 1500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A068 - 20261023_123138.wmv",
+        "particle_diameter": 1,
+        "feature_size": 17,
+        "minmass": 1500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A069 - 20261023_123205.wmv",
+        "particle_diameter": 1,
+        "feature_size": 17,
+        "minmass": 1500,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A050 - 20261023_112259.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 40
+    },
+    {
+        "video_file": "A058 - 20261023_121301.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A059 - 20261023_121310.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A060 - 20261023_121408.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A061 - 20261023_121415.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A062 - 20261023_122547.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A063 - 20261023_122603 - last 1.5.wmv",
+        "particle_diameter": 1.5,
+        "feature_size": 11,
+        "minmass": 200,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A052 - 20261023_114819.wmv",
+        "particle_diameter": 2,
+        "feature_size": 15,
+        "minmass": 1000,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A053 - 20261023_114827.wmv",
+        "particle_diameter": 2,
+        "feature_size": 17,
+        "minmass": 2000,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A056 - 20261023_115426.wmv",
+        "particle_diameter": 2,
+        "feature_size": 17,
+        "minmass": 2000,
+        "frame_limit": 60
+    },
+    {
+        "video_file": "A057 - 20261023_115737 - last 2.wmv",
+        "particle_diameter": 2,
+        "feature_size": 17,
+        "minmass": 2000,
+        "frame_limit": 60
+    },
+]
 
 # Figure style definition
 mpl.rc('figure',  figsize=(10, 5))
@@ -127,21 +264,34 @@ def generateCSV(file_name: str, video_file: str, particle_diameter: float, visib
         csvfile.write(f"{frames}, {fps}, {particle_diameter}, {particel_diameter_u}, {temperature}, {mmp}, {mmp_u}, {feature_size}, {minmass}, {visible_frames}\n")
         csvfile.write("#\n")
         trajectories.to_csv(csvfile, index=False)
+        csvfile.close()
 
 def main() -> None:
     '''Main function.'''
-    VERBOSE = input("Plot intermediate graphs? (Y/n)").lower() != "n"
-    particle_diameter: float = float(input("Particle diameter: "))
-    temperature: float = float(input("temperature: "))
-    mmp: float = 0.130
-    mmp_u: float = 0.003
-    camera_fps: int = 20
-    video: str = input("Video file: ")
-    feature_size: int = int(input("Feature size: "))
-    minmass: int = int(input("Minmass: "))
-    visible_frames: int = int(input("How many frames does a particle have to appear for to record its trajectory: "))
-    trajectories, frames = trackedParticletracjectories(video, feature_size, minmass, -1, visible_frames, VERBOSE, VERBOSE, VERBOSE, VERBOSE)
-    generateCSV(video, video, particle_diameter, visible_frames, feature_size, minmass, temperature, mmp, mmp_u, camera_fps, frames, trajectories)
+    manual: bool = str(input("Manual? (Y/n)")).lower() != "n"
+    if manual:
+        VERBOSE = input("Plot intermediate graphs? (Y/n)").lower() != "n"
+        particle_diameter: float = float(input("Particle diameter: "))
+        temperature: float = float(input("temperature: "))
+        mmp: float = 0.130
+        mmp_u: float = 0.003
+        camera_fps: int = 20
+        frame_limit: int = 60
+        video: str = input("Video file: ")
+        feature_size: int = int(input("Feature size: "))
+        minmass: int = int(input("Minmass: "))
+        #visible_frames: int = int(input("How many frames does a particle have to appear for to record its trajectory: "))
+        trajectories, frames = trackedParticletracjectories(video, feature_size, minmass, frame_limit, frame_limit//8, VERBOSE, VERBOSE, VERBOSE, VERBOSE)
+        generateCSV(video, video, particle_diameter, frame_limit//8, feature_size, minmass, temperature, mmp, mmp_u, camera_fps, frames, trajectories)
+    else:
+        mmp: float = 0.130
+        mmp_u: float = 0.003
+        camera_fps: int = 20
+        temperature: float = 20.9
+        for i, data in enumerate(VIDEO_DATA):
+            trajectories, frames = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"], data["frame_limit"]//8)
+            generateCSV(data["video_file"], data["video_file"], data["particle_diameter"], data["frame_limit"]//8, data["feature_size"], data["minmass"], temperature, mmp, mmp_u, camera_fps, frames, trajectories)
+            print(f"CSV {i+1} / {len(VIDEO_DATA)} generated.")
 
 if __name__ == "__main__":
     '''Module helper.'''

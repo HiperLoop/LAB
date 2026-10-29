@@ -18,13 +18,14 @@ VERBOSE: bool = False                                    # Determines whether in
 
 DATA_PATH: str = "./csv_data/"
 
-""" ["A018 - 20261021_155449.csv", 60],
+CSV_FILES: list[list[str | int]] = [
+    ["A018 - 20261021_155449.csv", 60],
     ["A002 - 20261021_140146.csv", 60],
     ["A003 - 20261021_141507.csv", 60],
     ["A042 - 20261023_110455.csv", 80],
     ["A006 - 20261021_144131.csv", 60],
     ["A032 - 20261021_161942.csv", 60],
-    
+    ["A073 - 20261023_123735.csv", 60],
     ["A076 - 20261023_123837.csv", 60],
     ["A080 - 20261023_123959.csv", 60],
     ["A064 - 20261023_123011.csv", 60],
@@ -41,11 +42,8 @@ DATA_PATH: str = "./csv_data/"
     ["A052 - 20261023_114819.csv", 50],
     ["A053 - 20261023_114827.csv", 60],
     ["A056 - 20261023_115426.csv", 60],
-    ["A057 - 20261023_115737 - last 2.csv", 60] """
-
-CSV_FILES: list[list[str | int]] = [
-    ["A072 - 20261023_123706.csv", 60],
-    ["A073 - 20261023_123735.csv", 60],
+    ["A057 - 20261023_115737 - last 2.csv", 60],
+    ["A072 - 20261023_123706.csv", 59],
 ]
 
 def getViscosityFromDiffusionParameter(temperature: float, particle_radius: float, diffusion_parameter: float) -> float:
@@ -108,7 +106,7 @@ def getDataFromCSV(csv_file: str, frame_limit: int) -> tuple[DataFrame, int, int
     new_labels: list[str] = data_frame.iloc[1].tolist()
     data_frame: DataFrame = data_frame[2:].astype('float64')
     data_frame.columns = new_labels
-    return data_frame[:np.where(data_frame['frame'] >= frame_limit+1)[0][0]], meta_data[0], meta_data[1], meta_data[2], meta_data[3], meta_data[4], TEMPERATURE_ABSOLUTE_UNCERTAINTY, meta_data[5], meta_data[6]
+    return data_frame, meta_data[0], meta_data[1], meta_data[2], meta_data[3], meta_data[4], TEMPERATURE_ABSOLUTE_UNCERTAINTY, meta_data[5], meta_data[6]
 
 def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
     data_length: int = len(csv_data)
