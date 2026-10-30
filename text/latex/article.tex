@@ -30,7 +30,7 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \lhead{NS-204B - Statystische fysica theorie en experiment}
-\rhead{\projectauthors}
+\rhead{}
 \fancyfoot{}
 \fancyfoot[R]{Page \thepage /\pageref{LastPage}}
 
@@ -44,6 +44,7 @@
 
 \newcommand{\mbeq}{\overset{!}{=}}
 \newcommand{\ko}{\frac{1}{4\pi \epsilon_0}}
+\newcommand{\fp}{../figures/}
 
 \lstset{frame=tb,
   language=java,
@@ -107,14 +108,57 @@ Utrecht University}
 \maketitle
 
 \section{Introduction}\label{intro}
-    Brownian motion is a phenomenon where small particles in a colloidal solution are not static, but are "jiggling about". This phenomenon is named after Robert Brown, who observed it on pollen grains in the 19th century. The theory of it has then been developed further by Christian Wiener and Albert Einstein. \cite{blundell2009} It is known that the amplitude of the motion is larger, the smaller the particles are, the lower the viscosity of the fluid and the higher the temperature of the solution. \cite{britannica_brownian_motion} An exact formula for the mean displacement of the particles has been found by Einstein in 1905. \cite{einstein1905} In this article we look at determining the viscosity of a colloidal solution of monodisperse polystyrene microspheres in water. 
+    Brownian motion is a phenomenon where small particles in a colloidal solution are not static, but are "jiggling about". This phenomenon is named after Robert Brown, who observed it on pollen grains in the 19th century. The theory of it has then been developed further by Christian Wiener and Albert Einstein \cite{blundell2009}. It is known that the amplitude of the motion is larger, the smaller the particles are, the lower the viscosity of the fluid and the higher the temperature of the solution \cite{britannica_brownian_motion}. An exact formula for the mean displacement of the particles has been found by Einstein in 1905 \cite{einstein1905}. In this article we look at determining the viscosity of a colloidal solution of monodisperse polystyrene microspheres in water. 
 
 \section{Theory}\label{theory}
-    theory 
+    In Brownian motion we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
+    \begin{equation}
+        \frac{\partial f}{\partial t} = D\frac{\partial^2 f}{\partial x^2},
+    \end{equation}
+    where $D$ is the diffusion coefficient \cite{einstein1905}.\\
+    We then define $f(x, t)dx$ to denote the number of particles that have moved by a displacement between $x$ and $x + dx$ in the $x$ direction in the time interval $[0, t]$. We can impose the initial conditions as
+    \begin{align*}
+        f(x, 0) = 0,\\
+        \int_{-\infty}^\infty f(x, 0)dx = n,
+    \end{align*}
+    where $n$ is the total number of particles suspended in the liquid \cite{einstein1905}. The solution to $f(x, t)$ can in this case be found analytically and is given by
+    \begin{equation}
+        f(x, t) = \frac{n}{\sqrt{4\pi Dt}}e^{-\frac{x^2}{4Dt}}.
+    \end{equation}
+    We can then determine the average displacement of a particle along the $x$ direction as
+    \begin{equation}
+        \lambda_x = \sqrt{\braket{x^2}} = \sqrt{2Dt},
+    \end{equation}
+    where $\bar {x^2}$ is the arithmetic mean of squares of displacements along the $x$ direction \cite{einstein1905}.\\
+    In the 2D case, we take the effect to be independent in the $x$ and $y$ axes. This then gives us an expression for the mean squared displacement in the $xy$-plane as
+    \begin{equation}
+        \braket{R^2} = \braket{x^2} + \braket{y^2} = \braket{x^2 + y^2} = 2Dt + 2Dt = 4Dt.
+    \end{equation}
+    We can then use this relation to find an equation for the diffusion coefficient as
+    \begin{align*}
+        4Dt &= \braket{R^2},\\
+        \frac{d}{dt}4Dt &= \frac{d}{dt}\braket{R^2},\\
+        4D &= \frac{d}{dt}\braket{R^2},\\
+        D &= \frac{d\braket{R^2}}{4dt}.
+    \end{align*}
+    To find the viscosity using the diffusion coefficient we use the Stokes-Einstein relation for spherical particles, given as
+    \begin{equation}
+        D = \frac{k_BT}{6\pi\mu a},
+    \end{equation}
+    where $k_B$ is the Boltzmann constant, $T$ is the thermodynamic temperature, $\mu$ is the dynamic viscosity and $a$ is the particle radius. We can then get an expression for the dynamic viscosity as
+    \begin{equation}
+        \mu = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}.
+    \end{equation}
 
 \section{Methodology}
     Methods
     As samples to be analysed, we are using monodisperse polystyrene microspheres of the sizes of $0.5-2 \mu\text{m}$ who are suspensed in water \cite{PolybeadMicrospheres200um}. The resulting liquid is a collodial suspension, which is the description for mixtures where the collodial particles are significantly larger then the solvent molecules but small enough to show brownian motion \cite{dijkstraComputerSimulationsCharge2001}. In our case, the particles are dissolved towards concentration significantly lower then the value in which these disolvants are being sold, namely of $2.5\%$ solids (w/v) aqueous suspension \cite{PolybeadMicrospheres200um}. We have used a concentration of $0.1\%$ across all measurements to minimize effects of differing concentration. 
+
+    \begin{figure}[htbp]
+        \includegraphics[width=0.5\textwidth]{\fp setup_schematic.png}
+        \caption{Schematic showing our experimental setup.}
+        \label{fig:setup_schematic}
+    \end{figure}
 \section{Results}\label{results}
     Results
 
