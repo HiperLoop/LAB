@@ -6,10 +6,6 @@ from pandas import DataFrame, Series
 from scipy.constants import Boltzmann
 from scipy.optimize import curve_fit
 
-CALIBRATION_FACTOR: float = 0.130                       # [mpp] Determined using Fiji
-CALIBRATION_ABSOLUTE_UNCERTAINTY : float= 0.003
-CALIBRATION_RELATIVE_UNCERTAINTY: float = CALIBRATION_ABSOLUTE_UNCERTAINTY/CALIBRATION_FACTOR
-
 TRACKPY_RELATIVE_UNCERTAINTY: float = 1/16              # In partice radius
 
 TEMPERATURE_ABSOLUTE_UNCERTAINTY: float = 0.1           # Absolute temperature uncertainty
