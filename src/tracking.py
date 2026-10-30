@@ -160,7 +160,7 @@ mpl.rc('image', cmap='gray')
 
 @pims.pipeline  # pyright: ignore[reportUntypedFunctionDecorator, reportAttributeAccessIssue]
 def gray(image: Series) -> Series:
-    '''Make image monochromatic by jsut taking the green channel in the RGB values.'''
+    '''Make image monochromatic by just taking the green channel in the RGB values.'''
     return image[:, :, 1]
 
 def celsiusToKelvin(temperature: float) -> float:
@@ -168,7 +168,7 @@ def celsiusToKelvin(temperature: float) -> float:
     return temperature + 273.15
 
 def loadFramesFromVideo(video_name: str) -> Series:
-    '''Load all video frames and conver them to monochrome.'''
+    '''Load all video frames and convert them to monochrome.'''
     return gray(pims.open(f'{VIDEO_PATH}{video_name}'))
 
 def processFrames(frames: Series, feature_size: int, minmass: int, processes: int = 1, show_plot: bool = False) -> DataFrame:
