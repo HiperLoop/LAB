@@ -123,10 +123,10 @@ Utrecht University}
         \frac{\partial f}{\partial t} = D\frac{\partial^2 f}{\partial x^2},
     \end{equation}
     where $D$ is the diffusion coefficient \cite{einstein1905}.\\
-    We then define $f(x, t)dx$ to denote the number of particles that have moved by a displacement between $x$ and $x + dx$ in the $x$ direction in the time interval $[0, t]$. We can impose the initial conditions as
+    We then define $f(x, t)dx$ to denote the number of particles that have moved by a displacement between $x$ and $x + dx$ in the $x$ direction in the time interval $[0, t]$. We can impose the initial and boundary conditions as
     \begin{align*}
         f(x, 0) = 0,\\
-        \int_{-\infty}^\infty f(x, 0)dx = n,
+        \int_{-\infty}^\infty f(x, t)dx = n,
     \end{align*}
     where $n$ is the total number of particles suspended in the liquid \cite{einstein1905}. The solution to $f(x, t)$ can in this case be found analytically and is given by
     \begin{equation}
