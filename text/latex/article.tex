@@ -102,7 +102,7 @@ Utrecht University}
 \date{\today}
 
 \begin{abstract}
-    Abstract
+    Brownian motion is the phenomenon of microscopic particles suspended in fluid moving randomly. We use the observation of particles undergoing Brownian motion to determine the viscosity of a colloidal suspension. We use a suspension of monodisperse polystyrene microspheres in water to track movement of the particles and through that determine the coefficient of diffusion of our sample. For the particloe tracking we use the python package trackpy. Using the Stokes-Einstein relation given by $D = \frac{k_BT}{6\pi\eta r}$, where $D$ is the diffusion coeffcient in $m^2/s$, $k_B = 1.38 \times 10^{-23}J/K$ is the Boltzmann constant, $T$ is the temperatur ein Kelvin, $\eta$ is the dynamic viscosity in $mPa\cdot s$ and $r$ is the radius of the particle, we then relate the diffusion coefficient to the viscosity. We measured the Diffusion coefficient of 25 videos across 4 different particle radii $r \in \{0.373, 0.53, 0.77, 1.03\} \mu m$. We found a mean value of viscosity for the different aprticle radii as $\eta_{r = 0.373} = 2.7 \pm 0.1 mPa\cdot s, \eta_{r = 0.53} = 2.1 \pm 0.2 mPa\cdot s, \eta_{r = 0.77} = 2.2 \pm 0.2 mPa\cdot s, \eta_{r = 1.03} = 2.0 \pm 0.4 mPa\cdot s$. Perfroming a constant function fit through the data yielded a viscosity of $\eta = 2.4 \pm 0.1 mPa\cdot s$. The difficulties of the experiment and subsequently errors in measurements were influenced by inability to dierctly measure sample temperature as only room temperature measurements were performed, incosnsistent sample lighting, sample interference that created phase contrast transitions and forced us to de-focus the samples to prevent change from dark to light colour, and finally the tracking of the particles. 
 \end{abstract}
 
 \maketitle
@@ -178,11 +178,12 @@ Utrecht University}
         \caption{Schematic showing our experimental setup.}
         \label{fig:setup_schematic}
     \end{figure}
+
 \section{Results}\label{results}
-    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim 10^{-1}\mu m$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.373$, 6 for $r = 0.53$, 8 for $r = 0.77$ and 5 for $r = 1.03$. We then averaged the results for each radius. As we did not expect the viscosity to change, we performed a constant function fit through our data and obtained a vlaue of viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$ as can be seen in Figure \ref{fig:result}.
+    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim 10^{-1}\mu m$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.373$, 6 for $r = 0.53$, 8 for $r = 0.77$ and 5 for $r = 1.03$. We then averaged the results for each radius and the resulting viscosities were $\eta_{r = 0.373} = 2.7 \pm 0.1 mPa\cdot s, \eta_{r = 0.53} = 2.1 \pm 0.2 mPa\cdot s, \eta_{r = 0.77} = 2.2 \pm 0.2 mPa\cdot s, \eta_{r = 1.03} = 2.0 \pm 0.4 mPa\cdot s$. As we did not expect the viscosity to change, we performed a constant function fit through our data and obtained a vlaue of viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$ as can be seen in Figure \ref{fig:result}.
     \begin{figure}[htbp]
         \includegraphics[width=0.5\textwidth]{\fp averaged.png}
-        \caption{The final result of average measurement of viscosity for particle radii $r \in \{1.03, 0.77, 0.53, 0.373\} \mu m$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$.}
+        \caption{The final result of average measurement of viscosity for particle radii $r \in \{1.03, 0.77, 0.53, 0.373\} \mu m$ as $\eta_{r = 0.373} = 2.7 \pm 0.1 mPa\cdot s, \eta_{r = 0.53} = 2.1 \pm 0.2 mPa\cdot s, \eta_{r = 0.77} = 2.2 \pm 0.2 mPa\cdot s, \eta_{r = 1.03} = 2.0 \pm 0.4 mPa\cdot s$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$.}
         \label{fig:result}
     \end{figure}
 
