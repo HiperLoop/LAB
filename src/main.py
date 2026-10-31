@@ -6,6 +6,8 @@ from pandas import DataFrame, Series
 from scipy.constants import Boltzmann
 from scipy.optimize import curve_fit
 
+plt.rcParams['text.usetex'] = True
+
 TRACKPY_RELATIVE_UNCERTAINTY: float = 1/16              # In partice radius
 
 TEMPERATURE_ABSOLUTE_UNCERTAINTY: float = 0.1           # Absolute temperature uncertainty
@@ -96,15 +98,15 @@ def viscosityFromTrajectories(file: str, drift_corrected_trajectories: DataFrame
     D, offset, D_uncertainty, chi = calculateDiffusionParameterFromData(amsd, amsd_uncertainty)
     if show_amsd_plot:
         plt.figure()
-        plt.subplot(121)
-        plt.errorbar(amsd.index, amsd.values, amsd_uncertainty, color='blue', label='Data points', linestyle='')
-        plt.xscale('log')
-        plt.yscale('log')
-        plt.title(f"MSD, time log log plot for {file}")
-        plt.subplot(122)
+        #plt.subplot(121)
+        #plt.errorbar(amsd.index, amsd.values, amsd_uncertainty, color='blue', label='Data points', linestyle='')
+        #plt.xscale('log')
+        #plt.yscale('log')
+        #plt.title(f"MSD, time log log plot for {file}")
+        #plt.subplot(122)
         plt.errorbar(amsd.index, amsd.values, amsd_uncertainty, color='green', label='Data points', linestyle='')
-        plt.plot(amsd.index, (4*D*amsd.index + offset) * 10**12, color='red', linestyle='--', label=f'Linear fit with resulting D = {(D* 10**12):.3} +- {(D_uncertainty* 10**12):.3f} microm^2/s (chi^2 = {chi})')
-        plt.title(f"MSD, time linear plot for {file}")
+        plt.plot(amsd.index, (4*D*amsd.index + offset) * 10**12, color='red', linestyle='--', label=f'Linear fit with resulting D = {(D* 10**12):.3} $\pm$ {(D_uncertainty* 10**12):.3f} $\mu m^2/s$ ($\chi^2$ = {chi})')
+        #plt.title(f"MSD, time linear plot for {file}")
         plt.legend()
         plt.show()
     if show_trajectories: plotTrajectories(drift_corrected_trajectories)
@@ -146,7 +148,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
             else:
                 viscosities[i], viscosity_uncertainties[i] = viscosityFromTrajectories(data[0], trajectories, int(frames_n), int(fps), float(particle_diameter), float(diameter_uncertainty), float(temperature), float(temperature_uncertainty), float(mmp), float(mmp_uncertainty))
 
-        print(f'{(i+1)}/{data_length} The viscosity of video {data[0]} is {viscosities[i]} +- {viscosity_uncertainties[i]} mPa*s')
+        print(f'{(i+1)}/{data_length} The viscosity of video {data[0]} is {viscosities[i]} $\pm$ {viscosity_uncertainties[i]} $mPa\cdot s$')
 
     unique_radii = np.unique(radii[radii > 0])
     mean_viscosities = []
@@ -185,7 +187,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
         mean_uncertainties.append(mean_unc)
         mean_relative_radius_uncertainties.append(mean_r_unc)
         
-        print(f"Radius {r}: Mean Viscosity = {mean_vis:.4f} +- {mean_unc:.4f} mPa*s (N={N}, Chi2_nu={reduced_chi_sq:.2f})")
+        print(f"Radius {r}: Mean Viscosity = {mean_vis:.4f} $\pm$ {mean_unc:.4f} $mPa\cdot s$ (N={N}, Chi2_nu={reduced_chi_sq:.2f})")
 
     unique_radii = np.array(unique_radii)
     mean_viscosities = np.array(mean_viscosities)
@@ -214,20 +216,20 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
         xerr=radii * relative_radius_uncertainties, 
         marker="o", linestyle='', capsize=4
     )
-    plt.title("Viscosity calculations for differently sized particles")
-    plt.xlabel("particle radius (microm)")
-    plt.ylabel("Viscosity (mPa*s)")
+    #plt.title("Viscosity calculations for differently sized particles")
+    plt.xlabel("particle radius ($\mu m$)")
+    plt.ylabel("Viscosity ($mPa\cdot s$)")
     plt.show()
 
     plt.figure()
     plt.errorbar(unique_radii, mean_viscosities, yerr=mean_uncertainties, xerr=unique_radii * mean_relative_radius_uncertainties, marker="o", linestyle='', capsize=4)
     fit_result_uncertainty: float = np.sqrt(np.diag(pcov))[0]
-    plt.plot([0.3, 1.1], [popt[0], popt[0]], label=f"Constant fit at {popt[0]:.1f} +- {fit_result_uncertainty:.1f} mPa*s (chi^2 = {final_reduced_chi_sq:.2f})")
+    plt.plot([0.3, 1.1], [popt[0], popt[0]], label=f"Constant fit at {popt[0]:.1f} $\pm$ {fit_result_uncertainty:.1f} $mPa\cdot s$ ($\chi^2$ = {final_reduced_chi_sq:.2f})")
     plt.plot([0.3, 1.1], [popt[0] + fit_result_uncertainty, popt[0] + fit_result_uncertainty], linestyle="--", color='gold', label="Constant fit uncertainty")
     plt.plot([0.3, 1.1], [popt[0] - fit_result_uncertainty, popt[0] - fit_result_uncertainty], linestyle="--", color='gold')
-    plt.title("Viscosity calculations for differently sized particles (Averaged)")
-    plt.xlabel("particle radius (microm)")
-    plt.ylabel("Viscosity (mPa*s)")
+    #plt.title("Viscosity calculations for differently sized particles (Averaged)")
+    plt.xlabel("particle radius ($\mu m$)")
+    plt.ylabel("Viscosity ($mPa\cdot s$)")
     plt.legend()
     plt.show()
 
