@@ -20,45 +20,10 @@ PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
 
 VIDEO_DATA: list[dict[str, typing.Any]] = [
     {
-        "video_file": "A018 - 20261021_155449.wmv",
-        "particle_diameter": 2.06,
-        "feature_size": 17,
-        "minmass": 1500,
-        "frame_limit": 60
-    },
-    {
         "video_file": "A002 - 20261021_140146.wmv",
         "particle_diameter": 1.54,
         "feature_size": 17,
         "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A003 - 20261021_141507.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 600,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A042 - 20261023_110455.wmv",
-        "particle_diameter": 1.06,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 80
-    },
-    {
-        "video_file": "A006 - 20261021_144131.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 17,
-        "minmass": 550,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A032 - 20261021_161942.wmv",
-        "particle_diameter": 0.746,
-        "feature_size": 17,
-        "minmass": 1000,
         "frame_limit": 60
     },
 ]
@@ -178,8 +143,8 @@ def generateCSV(file_name: str, video_file: str, particle_diameter: float, visib
 def main() -> None:
     '''Main function.'''
     manual: bool = str(input("Manual? (Y/n)")).lower() != "n"
+    VERBOSE = input("Plot intermediate graphs? (Y/n)").lower() != "n"
     if manual:
-        VERBOSE = input("Plot intermediate graphs? (Y/n)").lower() != "n"
         particle_diameter: float = float(input("Particle diameter: "))
         temperature: float = float(input("temperature: "))
         mmp: float = 0.130
@@ -198,7 +163,7 @@ def main() -> None:
         camera_fps: int = 20
         temperature: float = 21.0
         for i, data in enumerate(VIDEO_DATA):
-            trajectories, frames = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"], data["frame_limit"]//8)
+            trajectories, frames = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"], data["frame_limit"]//8, VERBOSE, VERBOSE, VERBOSE, VERBOSE)
             generateCSV(data["video_file"], data["video_file"], data["particle_diameter"], data["frame_limit"]//8, data["feature_size"], data["minmass"], temperature, mmp, mmp_u, camera_fps, frames, trajectories)
             print(f"CSV {i+1} / {len(VIDEO_DATA)} generated.")
 
