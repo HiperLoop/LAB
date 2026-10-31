@@ -119,16 +119,14 @@ Utrecht University}
 
 \section{Theory}\label{theory}
     A key relation connecting Brownian motion to the fluid's viscosity is the Stokes–Einstein relation, which is given as follows
-    \begin{align*}
-        D=\frac{k_BT}{6\pi \eta r}
-    \end{align*}
+    \begin{equation}
+        D = \frac{k_BT}{6\pi\eta r}, \label{SEr}
+    \end{equation}
     where $D$ in $\text{m}^2/\text{s}$ is the diffusion coefficient, $k_B$ is the Boltzmann constant given as $1.38 \times 10^{-23} \, \text{J/K}$, $T$ is the thermodynamic temperature in Kelvin, $\eta$ is the dynamic viscosity in Pascal-seconds, and $r$ is the particle radius in meters \cite{einstein1905}. It applies to spherical particles suspended in a Newtonian fluid and provides us with a way to determine the viscosity of the fluid by measuring the diffusion coefficient of the suspended particles. These conditions are mostly fufilled by our setup. We can rewrite this equation in terms of the viscosity as
-    \begin{align*}
-        \eta = \frac{k_BT}{6\pi Dr}.
-    \end{align*}
-    To find this, we can use the relation between the mean squared displacement of a particle and the diffusion coefficient. 
-    
-    In Brownian motion we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
+    \begin{equation}
+        \eta = \frac{k_BT}{6\pi Dr}. \label{first_viscosity}
+    \end{equation}
+    To get the diffusion coefficient as a function that we can measure, we look into the movement of particles that undergo Brownian motion. To begin, we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
     \begin{equation}
         \frac{\partial f}{\partial t} = D\frac{\partial^2 f}{\partial x^2},
     \end{equation}
@@ -158,13 +156,9 @@ Utrecht University}
         4D &= \frac{d}{dt}\braket{R^2},\\
         D &= \frac{d\braket{R^2}}{4dt}. \label{diff_coef}
     \end{align}
-    We can then get an expression for the dynamic viscosity as
+    We can then plug this expression into Eqn. \ref{first_viscosity} to get
     \begin{equation}
-        D = \frac{k_BT}{6\pi\mu a}, \label{SEr}
-    \end{equation}
-    where $k_B$ is the Boltzmann constant, $T$ is the thermodynamic temperature in Kelvin, $\mu$ is the dynamic viscosity in $Pa \cdot s$ and $a$ is the particle radius in meters. We can then get an expression for the dynamic viscosity as
-    \begin{equation}
-        \mu = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}. \label{viscosity}
+        \eta = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}. \label{viscosity}
     \end{equation}
     Calculating the uncertainty of a quantity is done using the formula
     \begin{equation}
@@ -194,6 +188,7 @@ Utrecht University}
 
 \section{Discussion}
     The aquisition and analysis of data for the experiment outlined in this article proved to be rather difficult.\par
+    Firstly, the temperature measured by the room thermometer is not necessarily the temperature of our sample. We tried to not touch any components of the smaple more than necessary as to not influence the temperature with our won body heat. That being said, diring the whole measuring procedure we had a light shile direcly on the sample, which could have potentially influenced the temperature within. Unfortunately, we did not have an instrument ot emasure the temperature of our sample directly, but that would be something that could be imporved.
     One of the problems we encountered was the inconsistency of our setup. Since the stand holding the light and the lense were not fixed in a position relative to the microscope, every time we disassembled and rebuilt the setup, our lighting conditions changed. We tried to reduce this effect as much as possible by placing the microscope and light aparatus into a relative position as close to the initial one as we could, however, this process was not aided by any tools and only eye estimation was used. Unfortunately, we were also not able to do perform this in an efficient way at the beginning of the data aquisition phase, which cost us valubale time. A way to achieve a more consistant setup would be using a microscope with a fixed light or potentially securing the light to the microscope in some way.\par
     Another issue, which we think had a bigger contribution to decreasing the quality of final data, was the tracking of particles using trackpy. Even after trying to mitigate effects disturbing the tracking of the particles, we observed that the effect of wrongful tracking is significant, which we were not able to quantify within the uncertainties. Furthermore, this might be a systematic error.\par
     One of the issues with the tracking of these particles lied in the light interfenece effects that made it so the particles transitioned from dark to light around the focus point. We tried to go around this problem by implementing a slight de-focus for the marticles we wanted to track to elimiate this problem, but then the particles were naturally less sharp, which introduced a new problem. Even though we did not quantify the difference beween in- and out of focus particles, we believe the de-focused particles produced better data, or were the very least easier to fine-tune the trackpy parameters for.\par
