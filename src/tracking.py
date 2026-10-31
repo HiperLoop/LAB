@@ -20,136 +20,45 @@ PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
 
 VIDEO_DATA: list[dict[str, typing.Any]] = [
     {
-        "video_file": "A072 - 20261023_123706.wmv",
-        "particle_diameter": 0.75,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A073 - 20261023_123735.wmv",
-        "particle_diameter": 0.75,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A076 - 20261023_123837.wmv",
-        "particle_diameter": 0.75,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A080 - 20261023_123959.wmv",
-        "particle_diameter": 0.75,
-        "feature_size": 9,
-        "minmass": 500,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A064 - 20261023_123011.wmv",
-        "particle_diameter": 1,
+        "video_file": "A018 - 20261021_155449.wmv",
+        "particle_diameter": 2.06,
         "feature_size": 17,
         "minmass": 1500,
         "frame_limit": 60
     },
     {
-        "video_file": "A065 - 20261023_123030.wmv",
-        "particle_diameter": 1,
+        "video_file": "A002 - 20261021_140146.wmv",
+        "particle_diameter": 1.54,
         "feature_size": 17,
-        "minmass": 1500,
+        "minmass": 2000,
         "frame_limit": 60
     },
     {
-        "video_file": "A068 - 20261023_123138.wmv",
-        "particle_diameter": 1,
+        "video_file": "A003 - 20261021_141507.wmv",
+        "particle_diameter": 1.06,
         "feature_size": 17,
-        "minmass": 1500,
+        "minmass": 600,
         "frame_limit": 60
     },
     {
-        "video_file": "A069 - 20261023_123205.wmv",
-        "particle_diameter": 1,
+        "video_file": "A042 - 20261023_110455.wmv",
+        "particle_diameter": 1.06,
         "feature_size": 17,
-        "minmass": 1500,
+        "minmass": 2000,
+        "frame_limit": 80
+    },
+    {
+        "video_file": "A006 - 20261021_144131.wmv",
+        "particle_diameter": 0.746,
+        "feature_size": 17,
+        "minmass": 550,
         "frame_limit": 60
     },
     {
-        "video_file": "A050 - 20261023_112259.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 40
-    },
-    {
-        "video_file": "A058 - 20261023_121301.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A059 - 20261023_121310.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A060 - 20261023_121408.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A061 - 20261023_121415.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A062 - 20261023_122547.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A063 - 20261023_122603 - last 1.5.wmv",
-        "particle_diameter": 1.5,
-        "feature_size": 11,
-        "minmass": 200,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A052 - 20261023_114819.wmv",
-        "particle_diameter": 2,
-        "feature_size": 15,
+        "video_file": "A032 - 20261021_161942.wmv",
+        "particle_diameter": 0.746,
+        "feature_size": 17,
         "minmass": 1000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A053 - 20261023_114827.wmv",
-        "particle_diameter": 2,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A056 - 20261023_115426.wmv",
-        "particle_diameter": 2,
-        "feature_size": 17,
-        "minmass": 2000,
-        "frame_limit": 60
-    },
-    {
-        "video_file": "A057 - 20261023_115737 - last 2.wmv",
-        "particle_diameter": 2,
-        "feature_size": 17,
-        "minmass": 2000,
         "frame_limit": 60
     },
 ]
@@ -287,7 +196,7 @@ def main() -> None:
         mmp: float = 0.130
         mmp_u: float = 0.003
         camera_fps: int = 20
-        temperature: float = 20.9
+        temperature: float = 21.0
         for i, data in enumerate(VIDEO_DATA):
             trajectories, frames = trackedParticletracjectories(data["video_file"], data["feature_size"], data["minmass"], data["frame_limit"], data["frame_limit"]//8)
             generateCSV(data["video_file"], data["video_file"], data["particle_diameter"], data["frame_limit"]//8, data["feature_size"], data["minmass"], temperature, mmp, mmp_u, camera_fps, frames, trajectories)
