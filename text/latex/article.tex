@@ -88,7 +88,7 @@
 
 \begin{document}
 
-\title{They Like to Move It, Move It \\ — Determining the Viscosity of Colloidal Suspensions of Monodisperse Polystyrene Microspheres in Water Using Brownian Motion}
+\title{They Like to Move It, Move It  — \\ Determining the Viscosity of Colloidal Suspensions of Monodisperse Polystyrene Microspheres in Water Using Brownian Motion}
         
 \author{Bela F. Brunner}
 %Lines break automatically or can be forced with \\
@@ -118,6 +118,16 @@ Utrecht University}
 
 
 \section{Theory}\label{theory}
+    A key relation connecting Brownian motion to the fluid's viscosity is the Stokes–Einstein relation, which is given as follows
+    \begin{align*}
+        D=\frac{k_BT}{6\pi \eta r}
+    \end{align*}
+    where $D$ in $\text{m}^2/\text{s}$ is the diffusion coefficient, $k_B$ is the Boltzmann constant given as $1.38 \times 10^{-23} \, \text{J/K}$, $T$ is the thermodynamic temperature in Kelvin, $\eta$ is the dynamic viscosity in Pascal-seconds, and $r$ is the particle radius in meters \cite{einstein1905}. It applies to spherical particles suspended in a Newtonian fluid and provides us with a way to determine the viscosity of the fluid by measuring the diffusion coefficient of the suspended particles. These conditions are mostly fufilled by our setup. We can rewrite this equation in terms of the viscosity as
+    \begin{align*}
+        \eta = \frac{k_BT}{6\pi Dr}.
+    \end{align*}
+    To find this, we can use the relation between the mean squared displacement of a particle and the diffusion coefficient. 
+    
     In Brownian motion we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
     \begin{equation}
         \frac{\partial f}{\partial t} = D\frac{\partial^2 f}{\partial x^2},
@@ -148,7 +158,7 @@ Utrecht University}
         4D &= \frac{d}{dt}\braket{R^2},\\
         D &= \frac{d\braket{R^2}}{4dt}. \label{diff_coef}
     \end{align}
-    To find the viscosity using the diffusion coefficient we use the Stokes-Einstein relation for spherical particles, given as
+    We can then get an expression for the dynamic viscosity as
     \begin{equation}
         D = \frac{k_BT}{6\pi\mu a}, \label{SEr}
     \end{equation}
