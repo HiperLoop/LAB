@@ -149,6 +149,11 @@ Utrecht University}
     \begin{equation}
         \mu = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}. \label{viscosity}
     \end{equation}
+    Calculating the uncertainty is done using the formula
+    \begin{equation}
+        \sigma_A = A \cdot \sqrt{\sum_n \sigma_n^2},
+    \end{equation}
+    where $A$ represents the quantity we want to calculate the resulting ucnertainty for and $\sigma_n$ are relative uncertainties of quantities that are in the formula for $A$.
 
 \section{Methodology}
     As samples to be analysed, we are using monodisperse polystyrene microspheres of the sizes of $0.5-2 \mu\text{m}$ who are suspensed in water \cite{PolybeadMicrospheres200um}. The resulting liquid is a collodial suspension, which is the description for mixtures where the collodial particles are significantly larger then the solvent molecules but small enough to show brownian motion \cite{dijkstraComputerSimulationsCharge2001}. In our case, the particles are dissolved towards concentration significantly lower then the value in which these disolvants are being sold, namely of $2.5\%$ solids (w/v) aqueous suspension \cite{PolybeadMicrospheres200um}. We have used a concentration of $0.1\%$ across all measurements to minimize effects of differing concentration.\\
@@ -162,7 +167,7 @@ Utrecht University}
         \label{fig:setup_schematic}
     \end{figure}
 \section{Results}\label{results}
-    Results
+    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim10^{-12}$ and $\sim10^{-13}$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.375$, 6 for $r = 0.5$, 8 for $r = 0.75$
     \begin{figure}[htbp]
         \includegraphics[width=0.5\textwidth]{\fp final_result.png}
         \caption{The final result of average measurement of viscosity for particle diameters $d \in {2, 1.5, 1, 0.75} \mu m$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa/s$.}
