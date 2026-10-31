@@ -8,7 +8,7 @@ import trackpy as tp
 from pandas import DataFrame, Series
 
 SAVE_PATH: str = "./csv_data/"
-VIDEO_PATH: str = './data/Adam Data/Video/'
+VIDEO_PATH: str = './video_data/'
 
 PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES: dict[float, float] = {
     2: 0.02,
@@ -115,6 +115,7 @@ def trackedParticletracjectories(video_name: str, feature_size: int, minmass: in
     return calculateDriftCorrectedTrajectories(trajectories, drift), number_of_frames
 
 def generateCSV(file_name: str, video_file: str, particle_diameter: float, visible_frames: int, feature_size: int, minmass: int, temperature: float, mmp: float, mmp_u: float, fps: int, frames: int, trajectories: DataFrame):
+    '''Generate CSV file to store all important metadata and trajectories for a video.'''
     file_path = os.path.join(SAVE_PATH, f'{file_name.split(".")[0]}.csv')
 
     particel_diameter_u: float = PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES[int(particle_diameter * 4)]
