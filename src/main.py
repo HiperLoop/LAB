@@ -104,7 +104,7 @@ def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of
     viscosity_uncertainty: float = calculateVicosityUncertainty(viscosity, D, D_uncertainty, diameter_uncertainty, temperature, temperature_uncertainty)
     return viscosity, viscosity_uncertainty
 
-def getDataFromCSV(csv_file: str, frame_limit: int) -> tuple[DataFrame, int, int, float, float, float, float, float, float]:
+def getDataFromCSV(csv_file: str) -> tuple[DataFrame, int, int, float, float, float, float, float, float]:
     data_frame = pd.read_csv(DATA_PATH + csv_file, comment="#")
     meta_data: list[int | float] = data_frame.iloc[0].tolist()
     new_labels: list[str] = data_frame.iloc[1].tolist()
@@ -119,7 +119,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
     radii: np.ndarray = np.zeros(data_length)
     relative_radius_uncertanties: np.ndarray = np.zeros(data_length)
     for i, data in enumerate(csv_data):
-        trajectories, frames_n, fps, particle_diameter, diameter_uncertainty, temperature, temperature_uncertainty, mmp, mmp_uncertainty = getDataFromCSV(str(data[0]), int(data[1]))
+        trajectories, frames_n, fps, particle_diameter, diameter_uncertainty, temperature, temperature_uncertainty, mmp, mmp_uncertainty = getDataFromCSV(str(data[0]))
         radii[i] = float(particle_diameter)/2
         relative_radius_uncertanties[i] = diameter_uncertainty
         if VERBOSE:

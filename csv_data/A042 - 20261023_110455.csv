@@ -2,7 +2,7 @@
 # This file contains the trajectories of tracked particles fromt the video: A042 - 20261023_110455.wmv.
 # The video has 80 frames at 20 fps.
 # Measurement data:
-# Particle diameter: 1 +- 0.01%.
+# Particle diameter: 1.06 +- 0.01%.
 # Temperature during measurement: 294.15 +- 0.1 K.
 # Micrometer to pixel calibration: 0.13 +- 0.003.
 # Tracking parameters:
@@ -12,7 +12,7 @@
 # ================================================================================================
 #
 frames, fps, particle_diameter, diameter_uncertainty, temperature, mmp, mmp_u, feature_size, minmass, visible_frames
-80, 20, 1, 0.01, 294.15, 0.13, 0.003, 17, 2000, 10
+80, 20, 1.06, 0.01, 294.15, 0.13, 0.003, 17, 2000, 10
 #
 y,x,mass,size,ecc,signal,raw_mass,ep,frame,particle
 42.083736234219714,475.10132957292507,3340.3379010887793,3.808662391575324,0.07644998311998057,56.97326261593808,28286.0,0.07650624433870762,0,0
