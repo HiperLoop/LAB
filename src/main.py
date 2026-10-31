@@ -149,22 +149,18 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
             mean_vis = v_group[0]
             mean_unc = u_group[0]
         else:
-            # 1. Individual weights from your trajectory uncertainties
+            # Weights
             weights = 1.0 / (u_group ** 2)
             sum_weights = np.sum(weights)
             
-            # 2. Weighted mean viscosity
             mean_vis = np.sum(weights * v_group) / sum_weights
-            
-            # 3. Internal variance of the weighted mean
             internal_var = 1.0 / sum_weights
             
-            # 4. Reduced Chi-squared (measures scatter vs. expected error)
+            # Reduced Chi-squared
             chi_squared = np.sum(weights * (v_group - mean_vis) ** 2)
             reduced_chi_sq = chi_squared / (N - 1)
             
-            # 5. Final uncertainty: scale up if scatter exceeds individual errors (Birge method)
-            # max(1.0, ...) ensures we never underestimate below the internal uncertainty
+            # Uncertainty scaling
             scaling_factor = np.sqrt(max(1.0, reduced_chi_sq))
             mean_unc = np.sqrt(internal_var) * scaling_factor
             
