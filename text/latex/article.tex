@@ -152,7 +152,7 @@ Utrecht University}
     \begin{equation}
         D = \frac{k_BT}{6\pi\mu a}, \label{SEr}
     \end{equation}
-    where $k_B$ is the Boltzmann constant, $T$ is the thermodynamic temperature, $\mu$ is the dynamic viscosity and $a$ is the particle radius. We can then get an expression for the dynamic viscosity as
+    where $k_B$ is the Boltzmann constant, $T$ is the thermodynamic temperature in Kelvin, $\mu$ is the dynamic viscosity in $Pa \cdot s$ and $a$ is the particle radius in meters. We can then get an expression for the dynamic viscosity as
     \begin{equation}
         \mu = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}. \label{viscosity}
     \end{equation}
@@ -175,10 +175,10 @@ Utrecht University}
         \label{fig:setup_schematic}
     \end{figure}
 \section{Results}\label{results}
-    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim 10^{-1}\mu m$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.373$, 6 for $r = 0.53$, 8 for $r = 0.77$ and 5 for $r = 1.03$. We then averaged the results for each radius. As we did not expect the viscosity to change, we performed a constant function fit through our data and obtained a vlaue of viscosity of $\nu = 2.4 \pm 0.1 mPa/s$ as can be seen in Figure \ref{fig:result}.
+    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim 10^{-1}\mu m$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.373$, 6 for $r = 0.53$, 8 for $r = 0.77$ and 5 for $r = 1.03$. We then averaged the results for each radius. As we did not expect the viscosity to change, we performed a constant function fit through our data and obtained a vlaue of viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$ as can be seen in Figure \ref{fig:result}.
     \begin{figure}[htbp]
         \includegraphics[width=0.5\textwidth]{\fp averaged.png}
-        \caption{The final result of average measurement of viscosity for particle radii $r \in \{1.03, 0.77, 0.53, 0.373\} \mu m$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa/s$.}
+        \caption{The final result of average measurement of viscosity for particle radii $r \in \{1.03, 0.77, 0.53, 0.373\} \mu m$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$.}
         \label{fig:result}
     \end{figure}
 
