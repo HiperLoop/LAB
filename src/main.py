@@ -70,6 +70,7 @@ def calculateDiffusionParameterFromData(average_mean_squared_displacement: Serie
     return D, offset, (np.sqrt(np.diag(pcov))[0]/4)
 
 def calculateVicosityUncertainty(viscosity: float, diffusion_coeficient: float, diffusion_absolute_uncertainty: float, diameter_uncertainty: float, temperature: float, temperature_uncertainty: float) -> float:
+    '''Performs uncertainty propagation to get viscosity uncrtainty.'''
     relative_temperature_uncertainty: float = temperature_uncertainty / temperature
     relative_diffusion_uncertainty: float = diffusion_absolute_uncertainty / diffusion_coeficient
     relative_particle_radius_uncertainty: float = diameter_uncertainty
@@ -105,6 +106,8 @@ def viscosityFromTrajectories(drift_corrected_trajectories: DataFrame, number_of
     return viscosity, viscosity_uncertainty
 
 def getDataFromCSV(csv_file: str) -> tuple[DataFrame, int, int, float, float, float, float, float, float]:
+    '''Read CSV file and output all important data: trajectories, number of frames, camera frame rate,
+    particle diametera and uncertainty, temperature and uncertainty, micrometer to pixel conversion and uncertainty.'''
     data_frame = pd.read_csv(DATA_PATH + csv_file, comment="#")
     meta_data: list[int | float] = data_frame.iloc[0].tolist()
     new_labels: list[str] = data_frame.iloc[1].tolist()
@@ -113,6 +116,7 @@ def getDataFromCSV(csv_file: str) -> tuple[DataFrame, int, int, float, float, fl
     return data_frame, meta_data[0], meta_data[1], meta_data[2], meta_data[3], meta_data[4], TEMPERATURE_ABSOLUTE_UNCERTAINTY, meta_data[5], meta_data[6]
 
 def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
+    '''Calculates viscosities from all videos and produces final plots.'''
     data_length: int = len(csv_data)
     viscosities: np.ndarray = np.zeros(data_length)
     viscosity_uncertainties: np.ndarray = np.zeros(data_length)
