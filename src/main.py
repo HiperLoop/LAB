@@ -133,7 +133,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
             else:
                 viscosities[i], viscosity_uncertainties[i] = viscosityFromTrajectories(trajectories, int(frames_n), int(fps), float(particle_diameter), float(diameter_uncertainty), float(temperature), float(temperature_uncertainty), float(mmp), float(mmp_uncertainty))
 
-        print(f'{(i+1)}/{data_length} The viscosity of video {data[0]} is {viscosities[i]} +- {viscosity_uncertainties[i]} mPa/s')
+        print(f'{(i+1)}/{data_length} The viscosity of video {data[0]} is {viscosities[i]} +- {viscosity_uncertainties[i]} mPa*s')
 
     unique_radii = np.unique(radii[radii > 0])
     mean_viscosities = []
@@ -167,7 +167,7 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
         mean_viscosities.append(mean_vis)
         mean_uncertainties.append(mean_unc)
         
-        print(f"Radius {r}: Mean Viscosity = {mean_vis:.4f} +- {mean_unc:.4f} mPa/s (N={N}, Chi2_nu={reduced_chi_sq:.2f})")
+        print(f"Radius {r}: Mean Viscosity = {mean_vis:.4f} +- {mean_unc:.4f} mPa*s (N={N}, Chi2_nu={reduced_chi_sq:.2f})")
 
     unique_radii = np.array(unique_radii)
     mean_viscosities = np.array(mean_viscosities)
@@ -182,18 +182,18 @@ def calculateAllViscosities(csv_data: list[list[str | int]]) -> None:
     plt.errorbar(radii, viscosities, yerr=viscosity_uncertainties, xerr=[ur * PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES[int(8 * ur)] for ur in radii], marker="o", linestyle='', capsize=4)
     plt.title("Viscosity calculations for differently sized particles")
     plt.xlabel("particle radius (microm)")
-    plt.ylabel("Viscosity (mPa/s)")
+    plt.ylabel("Viscosity (mPa*s)")
     plt.show()
 
     plt.figure()
     plt.errorbar(unique_radii, mean_viscosities, yerr=mean_uncertainties, xerr=[ur * PARTICLE_DIAMETER_RELATIVE_UNCERTAINTIES[int(8 * ur)] for ur in unique_radii], marker="o", linestyle='', capsize=4)
     fit_result_uncertainty: float = (np.sqrt(np.diag(pcov))[0])
-    plt.plot([0.3, 1.1], [popt[0], popt[0]], label=f"Constant fit at {popt[0]:.1f} +- {fit_result_uncertainty:.1f} mPa/s")
+    plt.plot([0.3, 1.1], [popt[0], popt[0]], label=f"Constant fit at {popt[0]:.1f} +- {fit_result_uncertainty:.1f} mPa*s")
     plt.plot([0.3, 1.1], [popt[0] + fit_result_uncertainty, popt[0] + fit_result_uncertainty], linestyle="--", color='gold', label="Constant fit uncertainty")
     plt.plot([0.3, 1.1], [popt[0] - fit_result_uncertainty, popt[0] - fit_result_uncertainty], linestyle="--", color='gold')
     plt.title("Viscosity calculations for differently sized particles")
     plt.xlabel("particle radius (microm)")
-    plt.ylabel("Viscosity (mPa/s)")
+    plt.ylabel("Viscosity (mPa*s)")
     plt.legend()
     plt.show()
 
