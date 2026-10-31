@@ -7,4 +7,4 @@
 
 ## Note on running the code
 
-Check that the input and output data paths are correct as the structure of the submission that we hand in might be different from how the project is tructured on our end.
+Check that the input and output data paths are correct as the structure of the submission that we hand in might be different from how the project is structured on our end.
