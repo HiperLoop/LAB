@@ -102,7 +102,7 @@ Utrecht University}
 \date{\today}
 
 \begin{abstract}
-    Abstract
+    Brownian motion is the phenomenon of microscopic particles suspended in fluid moving randomly. We use the observation of particles undergoing Brownian motion to determine the viscosity of a colloidal suspension. We use a suspension of monodisperse polystyrene microspheres in water to track movement of the particles and through that determine the coefficient of diffusion of our sample. For the particloe tracking we use the python package trackpy. Using the Stokes-Einstein relation given by $D = \frac{k_BT}{6\pi\eta r}$, where $D$ is the diffusion coeffcient in $m^2/s$, $k_B = 1.38 \times 10^{-23}J/K$ is the Boltzmann constant, $T$ is the temperatur ein Kelvin, $\eta$ is the dynamic viscosity in $mPa\cdot s$ and $r$ is the radius of the particle, we then relate the diffusion coefficient to the viscosity. We measured the Diffusion coefficient of 25 videos across 4 different particle radii $r \in \{0.373, 0.53, 0.77, 1.03\} \mu m$. We found a mean value of viscosity for the different aprticle radii as $\eta_{r = 0.373} = 2.7 \pm 0.1 mPa\cdot s, \eta_{r = 0.53} = 2.1 \pm 0.2 mPa\cdot s, \eta_{r = 0.77} = 2.2 \pm 0.2 mPa\cdot s, \eta_{r = 1.03} = 2.0 \pm 0.4 mPa\cdot s$. Perfroming a constant function fit through the data yielded a viscosity of $\eta = 2.4 \pm 0.1 mPa\cdot s$. The difficulties of the experiment and subsequently errors in measurements were influenced by inability to dierctly measure sample temperature as only room temperature measurements were performed, incosnsistent sample lighting, sample interference that created phase contrast transitions and forced us to de-focus the samples to prevent change from dark to light colour, and finally the tracking of the particles. 
 \end{abstract}
 
 \maketitle
@@ -112,31 +112,29 @@ Utrecht University}
 
     Einstein's theoretical description relates the mean squared displacement of suspended particles to the diffusion coefficient and elapsed time \cite{einstein1905}. This relationship provides a way to investigate the properties of a fluid through the motion of particles suspended within it. In particular, the Stokes-Einstein relation relates the diffusion coefficient to the particle size, fluid viscosity and temperature \cite{britannica_brownian_motion}. Consequently, by tracking the Brownian motion of particles with known properties, the viscosity of the surrounding fluid can be determined.
     
-    In this experiment, Brownian motion is used to determine the viscosity of aqueous suspensions containing monodisperse polystyrene microspheres of different sizes. By tracking the displacement of individual particles over time, their diffusion coefficients can be determined and related to the viscosity of the surrounding fluid. The main objective is to investigate whether this method provides a reliable determination of viscosity and to examine how the measured viscosity depends on the size of the suspended microspheres. If successfull, this would allow an \textit{in situ}\footnote{Meaning without altering the position of the liquid} measurement of the viscosity of the liquid. This is especially advantageous since it allows for measurements without disturbing the microsystem \cite{kimBrownianMicroscopySimultaneous2008}.
+    In this experiment, Brownian motion is used to determine the viscosity of aqueous suspensions containing monodisperse polystyrene microspheres of different sizes. By tracking the displacement of individual particles over time, their diffusion coefficients can be determined and related to the viscosity of the surrounding fluid. The main objective is to investigate whether this method provides a reliable determination of viscosity. If successfull, this would allow an \textit{in situ}\footnote{Meaning without altering the position of the liquid} measurement of the viscosity of the liquid. This is especially advantageous since it allows for measurements without disturbing the microsystem \cite{kimBrownianMicroscopySimultaneous2008}.
     
     
 
 
 \section{Theory}\label{theory}
     A key relation connecting Brownian motion to the fluid's viscosity is the Stokes–Einstein relation, which is given as follows
-    \begin{align*}
-        D=\frac{k_BT}{6\pi \eta r}
-    \end{align*}
+    \begin{equation}
+        D = \frac{k_BT}{6\pi\eta r}, \label{SEr}
+    \end{equation}
     where $D$ in $\text{m}^2/\text{s}$ is the diffusion coefficient, $k_B$ is the Boltzmann constant given as $1.38 \times 10^{-23} \, \text{J/K}$, $T$ is the thermodynamic temperature in Kelvin, $\eta$ is the dynamic viscosity in Pascal-seconds, and $r$ is the particle radius in meters \cite{einstein1905}. It applies to spherical particles suspended in a Newtonian fluid and provides us with a way to determine the viscosity of the fluid by measuring the diffusion coefficient of the suspended particles. These conditions are mostly fufilled by our setup. We can rewrite this equation in terms of the viscosity as
-    \begin{align*}
-        \eta = \frac{k_BT}{6\pi Dr}.
-    \end{align*}
-    To find this, we can use the relation between the mean squared displacement of a particle and the diffusion coefficient. 
-    
-    In Brownian motion we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
+    \begin{equation}
+        \eta = \frac{k_BT}{6\pi Dr}. \label{first_viscosity}
+    \end{equation}
+    To get the diffusion coefficient as a function that we can measure, we look into the movement of particles that undergo Brownian motion. To begin, we assume that the motion of each distinct particle is independent of the motion of the other suspended particles. If we then also impose the condition that the number of particles per unit volume $\nu$ is a function of only $x$ and $t$, i.e. $\nu = f(x, t)$, we get that it sattisfies the equation
     \begin{equation}
         \frac{\partial f}{\partial t} = D\frac{\partial^2 f}{\partial x^2},
     \end{equation}
     where $D$ is the diffusion coefficient \cite{einstein1905}.\\
-    We then define $f(x, t)dx$ to denote the number of particles that have moved by a displacement between $x$ and $x + dx$ in the $x$ direction in the time interval $[0, t]$. We can impose the initial conditions as
+    We then define $f(x, t)dx$ to denote the number of particles that have moved by a displacement between $x$ and $x + dx$ in the $x$ direction in the time interval $[0, t]$. We can impose the initial and boundary conditions as
     \begin{align*}
         f(x, 0) = 0,\\
-        \int_{-\infty}^\infty f(x, 0)dx = n,
+        \int_{-\infty}^\infty f(x, t)dx = n,
     \end{align*}
     where $n$ is the total number of particles suspended in the liquid \cite{einstein1905}. The solution to $f(x, t)$ can in this case be found analytically and is given by
     \begin{equation}
@@ -158,9 +156,9 @@ Utrecht University}
         4D &= \frac{d}{dt}\braket{R^2},\\
         D &= \frac{d\braket{R^2}}{4dt}. \label{diff_coef}
     \end{align}
-    We can then get an expression for the dynamic viscosity as
+    We can then plug this expression into Eqn. \ref{first_viscosity} to get
     \begin{equation}
-        \eta = \frac{k_BT}{6\pi Dr} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} r}. \label{viscosity}
+        \eta = \frac{k_BT}{6\pi Da} = \frac{2k_BT}{3\pi \frac{d\braket{R^2}}{dt} a}. \label{viscosity}
     \end{equation}
     Calculating the uncertainty of a quantity is done using the formula
     \begin{equation}
@@ -173,7 +171,7 @@ Utrecht University}
 
     We prepared samples with four different particle radii, namely $r \in \{0.373, 0.53, 0.77, 1.03\} \mu m$, for which the differences from the factory-specified values had been determined in advance. The samples were then placed on a microscope slide and covered with a coverslip to prevent evaporation of the liquid. The slide was placed under a microscope with a magnification of $40\times$, and a light source was positioned at an angle to the sample to create contrast and make the particles more visible.
 
-    To calculate the final viscosity using Eqn. \ref{viscosity}, we needed to determine the temperature and diffusion coefficient. The temperature was measured using a room thermometer located in the room where the experiment was conducted. This thermometer had a precision of $0.1^\circ C$, and the room temperature ranged between $20.9^\circ C$ and $21^\circ C$.
+    To calculate the final viscosity using Eqn. \ref{viscosity}, we needed to determine the temperature and diffusion coefficient. The temperature was measured using a room thermometer located in the room where the experiment was conducted. This thermometer had a precision of $0.1^\circ C$.
 
     We calculated the diffusion coefficient by measuring the mean squared displacement $\braket{R^2}$ of the particles over time. To do this, we recorded videos of the particles using the DinoCapture 2.0 software. The videos were recorded at a frame rate of 20 frames per second, with durations between 3 and 9 seconds and a resolution of 640x480 pixels. The resulting videos were then processed using the Python library Trackpy to track the movements of the particles and calculate their mean squared displacement over time.
 
@@ -194,22 +192,46 @@ Utrecht University}
     \caption{Schematic of the experimental setup used to record the Brownian motion of polystyrene microspheres suspended in water. The sample was placed on a microscope slide under a $40\times$ microscope objective and illuminated from an angle to improve particle contrast. Particle motion was recorded using a camera connected to a computer.}
     \label{fig:setup_schematic}
 \end{figure}
-```
+
 \section{Results}\label{results}
-    Our meausred value of temperature was of the order of $\sim21^\circ C$. The diffusion coefficient was of the order $\sim 10^{-1}\mu m$ depending on the particle radius. In the end we calcualted 25 viscosity values, 6 for $r = 0.373$, 6 for $r = 0.53$, 8 for $r = 0.77$ and 5 for $r = 1.03$. We then averaged the results for each radius. As we did not expect the viscosity to change, we performed a constant function fit through our data and obtained a vlaue of viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$ as can be seen in Figure \ref{fig:result}.
+
+    The measured room temperature ranged from $20.9^\circ C$ to $21.0^\circ C$. The diffusion coefficients obtained from the particle trajectories were of the order of $10^{-1}\,\mu\text{m}^2/\text{s}$, depending on the particle radius.
+
+    In total, we obtained 25 viscosity estimates. These were grouped according to particle radius: 6 measurements for $r = 0.373\,\mu\text{m}$, 6 for $r = 0.53\,\mu\text{m}$, 8 for $r = 0.77\,\mu\text{m}$, and 5 for $r = 1.03\,\mu\text{m}$. 
+
+    Since the viscosity is not expected to depend on the radius of the suspended particles, we performed a fit using a constant function. This yielded an overall viscosity of
+
+    \[
+    \eta = (2.4 \pm 0.1)\,\text{mPa}\cdot\text{s}.
+    \]
+
+    The individual average viscosities and the constant fit are shown in Figure \ref{fig:result}. When averaging the viscosity estimates for each particle radius, we used the Birge ratio method to account for possible discrepancies between the individual uncertainties and the observed spread of the measurements. An example of the fitting of the mean squared displacement to obtain the diffusion coefficient is shown in Figure \ref{fig:msd_fit}.
+
     \begin{figure}[htbp]
+        \centering
         \includegraphics[width=0.5\textwidth]{\fp averaged.png}
-        \caption{The final result of average measurement of viscosity for particle radii $r \in \{1.03, 0.77, 0.53, 0.373\} \mu m$ and a fit of a cosntant function that yields resulting viscosity of $\nu = 2.4 \pm 0.1 mPa\cdot s$.}
+        \caption{Average viscosity obtained for each particle radius. The points represent the average viscosity values for different particle radii. The solid line shows the constant fit, yielding an overall viscosity of $(2.4 \pm 0.1)\,\text{mPa}\cdot\text{s}$. The dashed lines indicate the uncertainty of the fitted value.}
         \label{fig:result}
+    \end{figure}    
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.5\textwidth]{\fp D_fit.png}
+        \caption{Example of the mean squared displacement (MSD) as a function of time for one particles with radius $r = 0.53\,\mu\text{m}$. The green data points represent the calculated MSD values, while the dashed red line shows the linear fit constrained to pass through the origin. The slope of the fit is used to determine the diffusion coefficient.}
+        \label{fig:msd_fit}
+        
     \end{figure}
+
+
 
 \section{Discussion}
     The aquisition and analysis of data for the experiment outlined in this article proved to be rather difficult.\par
+    Firstly, the temperature measured by the room thermometer is not necessarily the temperature of our sample. We tried to not touch any components of the smaple more than necessary as to not influence the temperature with our won body heat. That being said, diring the whole measuring procedure we had a light shile direcly on the sample, which could have potentially influenced the temperature within. Unfortunately, we did not have an instrument to measure the temperature of our sample directly, but that would be something that could be imporved.
     One of the problems we encountered was the inconsistency of our setup. Since the stand holding the light and the lense were not fixed in a position relative to the microscope, every time we disassembled and rebuilt the setup, our lighting conditions changed. We tried to reduce this effect as much as possible by placing the microscope and light aparatus into a relative position as close to the initial one as we could, however, this process was not aided by any tools and only eye estimation was used. Unfortunately, we were also not able to do perform this in an efficient way at the beginning of the data aquisition phase, which cost us valubale time. A way to achieve a more consistant setup would be using a microscope with a fixed light or potentially securing the light to the microscope in some way.\par
     Another issue, which we think had a bigger contribution to decreasing the quality of final data, was the tracking of particles using trackpy. Even after trying to mitigate effects disturbing the tracking of the particles, we observed that the effect of wrongful tracking is significant, which we were not able to quantify within the uncertainties. Furthermore, this might be a systematic error.\par
     One of the issues with the tracking of these particles lied in the light interfenece effects that made it so the particles transitioned from dark to light around the focus point. We tried to go around this problem by implementing a slight de-focus for the marticles we wanted to track to elimiate this problem, but then the particles were naturally less sharp, which introduced a new problem. Even though we did not quantify the difference beween in- and out of focus particles, we believe the de-focused particles produced better data, or were the very least easier to fine-tune the trackpy parameters for.\par
-    Another contribution to the difficulty of tracking was the fact that our microscope was set to a specific depth of field, where the particloes we wanted to observe we in the focus we wanted (which as mentioned before was a slight de-focus). However, the sample was not 2D, but the particles also moved in the direction of our line of sight. This meant that sometimes the particles moved further into de-focusing themselves or covnersely, moved into the focus, introducing the interference problem again. In practice this meant that we had to only keep video data that did not contain these issues, which meant taking more videos than needed and filtering those that were deemed unsuable due to these phenomena.\par
-    Finally, another obstacle we had to overcome was the fact that the longer we observed a given sample, the higher the calcualted viscosity seemed to climb. We attributed this to the fact that are sample was a liquid, whcih was only trapped between the sample glass plate on either side. This mean, however, that parts of the liquid could evaporate and other processes disturbing the integrity of the sample could take place. To mitigate this phenomen and its effect on our data, we only used a given sample for a limited time after its preperation, wafter which we were forced to make a new one if more measurements were required.
+    Another contribution to the difficulty of tracking was the fact that our microscope was set to a specific depth of field, where the particloes we wanted to observe we in the focus we wanted (which as mentioned before was a slight de-focus). However, the sample was not 2D, but the particles also moved in the direction of our line of sight. This meant that sometimes the particles moved further into de-focusing themselves or covnersely, moved intothe focus, introducingthe interference problem again. In practice this meant that we had to only keep video data that did not contain these issues, which meant taking more videos than needed and filtering those that were deemed unsuable due to these phenomena.\par
+    Finally, another obstacle we had to overcome wasthe fact that the longer we observed agiven sample, the higher the calcualted viscosity seemed to climb. We attributed this tothe fact that are sample was a liquid, which was only trapped between the sample glass plate on either side. This mean, however, that parts of the liquid could evaporate and other processes disturbing the integrity of the sample could take place. To mitigate this phenomen and its effect on our data, we only used a given sample for a limited time after its preperation, after which we were forced to make a new one if more measurements were required.
 
 \section{Conclusions}\label{conclusions}
     Conclusion
